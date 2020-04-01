@@ -1,0 +1,15 @@
+{
+  "ratings": [
+    {
+      "id": "617af92e-604d-45ee-9a3f-33e9bbb8e53a",
+      "leftIdea": {
+        "id": "a49e929a-9879-4780-b5cb-fa81a33afcd2",
+        "content": "The technology can be used to investigate how many active wild animals there are in the field."
+      },
+      "rightIdea": {
+        "id": "4062c61c-741b-4e87-9eba-38a5c8559708",
+        "content": "it could monitor children or animals when not able to watch them directly and to watch for any actions that aren't familiar with the system."
+      }
+    }
+  ]
+}
