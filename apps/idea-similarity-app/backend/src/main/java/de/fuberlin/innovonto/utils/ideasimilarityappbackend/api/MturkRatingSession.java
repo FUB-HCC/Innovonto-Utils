@@ -8,8 +8,7 @@ import javax.persistence.Id;
 import java.util.UUID;
 
 @Entity
-public class IdeaSimilarityRating {
-
+public class MturkRatingSession {
     @Id
     @GeneratedValue(generator = "UUID")
     @GenericGenerator(
@@ -17,11 +16,4 @@ public class IdeaSimilarityRating {
             strategy = "de.fuberlin.innovonto.utils.common.FallbackUUIDGenerator"
     )
     private UUID id;
-
-    //TODO left
-    //TODO right
-    //TODO rating-value
-    //TODO rating:title
-    //TODO session-information: HWA
-    //TODO approved-flag
 }
