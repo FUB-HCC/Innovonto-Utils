@@ -1,12 +1,23 @@
 plugins {
+	id 'java'
 	id 'org.springframework.boot' version '2.2.6.RELEASE'
 	id 'io.spring.dependency-management' version '1.0.9.RELEASE'
-	id 'java'
+	id 'com.google.cloud.tools.jib' version '2.1.0'
 }
 
 group = 'de.fuberlin.innovonto.utils'
 version = '0.0.1-SNAPSHOT'
 sourceCompatibility = '11'
+
+def registry = "git.imp.fu-berlin.de:5000"
+
+jib {
+	to {
+		image = registry + "/ideas-to-market/innovonto-parent/" + "idea-similarity-app"
+		//TODO think about: jib.to.image = 'gcr.io/my-gcp-project/my-app:' + System.nanoTime()
+		tags = ['latest']
+	}
+}
 
 configurations {
 	developmentOnly
@@ -28,6 +39,10 @@ dependencies {
 
 	developmentOnly 'org.springframework.boot:spring-boot-devtools'
 	runtimeOnly 'com.h2database:h2'
+
+	implementation 'org.apache.jena:jena-core:3.14.0'
+	implementation 'org.apache.jena:jena-arq:3.14.0'
+
 	testImplementation('org.springframework.boot:spring-boot-starter-test') {
 		exclude group: 'org.junit.vintage', module: 'junit-vintage-engine'
 	}
