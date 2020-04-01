@@ -1,7 +1,7 @@
 import axios from "axios";
 
 export const requestIdeaPairs = (session, dispatch, errorDispatch) => {
-  const  requestUrl = process.env.PUBLIC_URL + "/data/mockdata-solution-map.json";
+  const  requestUrl = process.env.PUBLIC_URL + "/data/mockdata-rating-pairs.json";
 
   axios
     .get(requestUrl)
