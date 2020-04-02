@@ -28,6 +28,10 @@ Running the standalone server created by the gradle bootJar task:
         
         curl "http://localhost:8080/api"
         
+There is a swagger ui running at:
+
+        http://localhost:8080/swagger-ui.html
+        
 
 ### Run local docker-container
     
