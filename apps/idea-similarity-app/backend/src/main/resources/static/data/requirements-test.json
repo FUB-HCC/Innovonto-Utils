@@ -1,0 +1,79 @@
+{
+  "id": "test-collection-round",
+  "ideas": [
+    {
+      "@id": "https://innovonto-core.imp.fu-berlin.de/entities/ideas/1993da2b-008e-44de-aa1f-20f91df22123",
+      "@type": "gi2mo:Idea",
+      "content": "This is also good for detected shape under the sea. Perhaps buried tresure that we have no idea about.",
+      "hasIdeaContest": "https://innovonto-core.imp.fu-berlin.de/entities/ideaContests/i2m-bionic-radar"
+    },
+    {
+      "@id": "https://innovonto-core.imp.fu-berlin.de/entities/ideas/207ed8be-e222-441c-bb86-3c75fc918208",
+      "@type": "gi2mo:Idea",
+      "content": "The way this technology can be used is by detecting the flow of people. For example in a crowded area, if we  can study the way people move, the flow of the crowd and where they go, we can design large areas to be more open. One specific place would be an airport, if we can utilize this technology and learn where people tend to walk, where people tend to gravitate to when going through an airport.  From personal experience I have seen that people tend to 'clog up' a certain area when they go through an airport. If the technology could figure out how we can design a large space, we could better prevent long lines, and too many people crowded in a space.",
+      "hasIdeaContest": "https://innovonto-core.imp.fu-berlin.de/entities/ideaContests/i2m-bionic-radar"
+    },
+    {
+      "@id": "https://innovonto-core.imp.fu-berlin.de/entities/ideas/38c55775-2352-409d-adf4-ecb50123e60a",
+      "@type": "gi2mo:Idea",
+      "content": "The technology can be used to track migration patterns of invasive organisms, such as algal bloom or certain insects. ",
+      "hasIdeaContest": "https://innovonto-core.imp.fu-berlin.de/entities/ideaContests/i2m-bionic-radar"
+    },
+    {
+      "@id": "https://innovonto-core.imp.fu-berlin.de/entities/ideas/584397b2-a2de-46c6-b0c3-0a1d244ed6b4",
+      "@type": "gi2mo:Idea",
+      "content": "Can be used in the wilderness to see migration patterns and how often the same animals come back without having to use geo tags on them",
+      "hasIdeaContest": "https://innovonto-core.imp.fu-berlin.de/entities/ideaContests/i2m-bionic-radar"
+    },
+    {
+      "@id": "https://innovonto-core.imp.fu-berlin.de/entities/ideas/6f7a5f9b-dc13-4467-a0e8-bc72a1b26025",
+      "@type": "gi2mo:Idea",
+      "content": "You could use the technology to detect unwanted animals.  In Florida, they have in recent years, had an influx of pythons not indigenous to the area.  The snakes are causing issues with the ecosystem.  ",
+      "hasIdeaContest": "https://innovonto-core.imp.fu-berlin.de/entities/ideaContests/i2m-bionic-radar"
+    },
+    {
+      "@id": "https://innovonto-core.imp.fu-berlin.de/entities/ideas/8af6f8b6-0973-4992-8ea3-585d5efd7e10",
+      "@type": "gi2mo:Idea",
+      "content": "Profiling criminals",
+      "hasIdeaContest": "https://innovonto-core.imp.fu-berlin.de/entities/ideaContests/i2m-bionic-radar"
+    },
+    {
+      "@id": "https://innovonto-core.imp.fu-berlin.de/entities/ideas/9660eb93-cef2-4cfd-82d8-52077c0d9a20",
+      "@type": "gi2mo:Idea",
+      "content": "Use the technology for deaf people to write",
+      "hasIdeaContest": "https://innovonto-core.imp.fu-berlin.de/entities/ideaContests/i2m-bionic-radar"
+    },
+    {
+      "@id": "https://innovonto-core.imp.fu-berlin.de/entities/ideas/b7b884b5-335a-44f6-99ad-2d38b2f6d884",
+      "@type": "gi2mo:Idea",
+      "content": "This technology can record a person's gait and indicate what corrections can be made for a healthier posture.",
+      "hasIdeaContest": "https://innovonto-core.imp.fu-berlin.de/entities/ideaContests/i2m-bionic-radar"
+    },
+    {
+      "@id": "https://innovonto-core.imp.fu-berlin.de/entities/ideas/cf65b021-620f-43fe-9473-1712be788cde",
+      "@type": "gi2mo:Idea",
+      "content": "This can enable me to interact and see where others are in my home.",
+      "hasIdeaContest": "https://innovonto-core.imp.fu-berlin.de/entities/ideaContests/i2m-bionic-radar"
+    },
+    {
+      "@id": "https://innovonto-core.imp.fu-berlin.de/entities/ideas/fb85b2da-bc85-4ecc-b44c-5e9b94a72238",
+      "@type": "gi2mo:Idea",
+      "content": "Security systems could use this technology to identify intruders. ",
+      "hasIdeaContest": "https://innovonto-core.imp.fu-berlin.de/entities/ideaContests/i2m-bionic-radar"
+    }
+  ],
+  "pairs": [
+    ["1993da2b-008e-44de-aa1f-20f91df22123","207ed8be-e222-441c-bb86-3c75fc918208"],
+    ["1993da2b-008e-44de-aa1f-20f91df22123","38c55775-2352-409d-adf4-ecb50123e60a"],
+    ["1993da2b-008e-44de-aa1f-20f91df22123","584397b2-a2de-46c6-b0c3-0a1d244ed6b4"],
+    ["1993da2b-008e-44de-aa1f-20f91df22123","6f7a5f9b-dc13-4467-a0e8-bc72a1b26025"],
+    ["1993da2b-008e-44de-aa1f-20f91df22123","8af6f8b6-0973-4992-8ea3-585d5efd7e10"],
+    ["1993da2b-008e-44de-aa1f-20f91df22123","9660eb93-cef2-4cfd-82d8-52077c0d9a20"],
+    ["1993da2b-008e-44de-aa1f-20f91df22123","b7b884b5-335a-44f6-99ad-2d38b2f6d884"],
+    ["1993da2b-008e-44de-aa1f-20f91df22123","fb85b2da-bc85-4ecc-b44c-5e9b94a72238"],
+    ["207ed8be-e222-441c-bb86-3c75fc918208","584397b2-a2de-46c6-b0c3-0a1d244ed6b4"],
+    ["207ed8be-e222-441c-bb86-3c75fc918208","584397b2-a2de-46c6-b0c3-0a1d244ed6b4"]
+  ],
+  "goalRatingsPerPair": 2,
+  "batchSize": 2
+}

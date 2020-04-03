@@ -4,6 +4,9 @@ import de.fuberlin.innovonto.utils.ideasimilarityappbackend.api.batch.ChallengeD
 import de.fuberlin.innovonto.utils.ideasimilarityappbackend.api.batch.IdeaDTO;
 import de.fuberlin.innovonto.utils.ideasimilarityappbackend.api.batch.IdeaPairBatchDTO;
 import de.fuberlin.innovonto.utils.ideasimilarityappbackend.api.batch.IdeaPairBatchDistributorService;
+import de.fuberlin.innovonto.utils.ideasimilarityappbackend.management.Batch;
+import de.fuberlin.innovonto.utils.ideasimilarityappbackend.management.BatchRepository;
+import de.fuberlin.innovonto.utils.ideasimilarityappbackend.model.IdeaPair;
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.boot.CommandLineRunner;
 import org.springframework.boot.SpringApplication;
@@ -24,7 +27,7 @@ public class IdeaSimilarityAppBackendApplication {
 
     @Bean
     @Autowired
-    public CommandLineRunner createTestData(IdeaPairBatchDistributorService distributorService) {
+    public CommandLineRunner createTestData(IdeaPairBatchDistributorService distributorService, BatchRepository batchRepository) {
         return (args) -> {
             final Map<String, ChallengeDTO> challenges = new HashMap<>();
             challenges.put("fabricDisplay", new ChallengeDTO("fd", "Qui aliquip laborum aliqua adipisicing fugiat magna commodo non reprehenderit et tempor velit non. Esse excepteur esse enim amet dolor laborum dolor. Mollit irure anim pariatur eiusmod eu excepteur magna commodo consequat nostrud et et duis. Nisi aute cillum non culpa excepteur Lorem pariatur qui cupidatat duis. Dolore proident dolore nisi aliqua labore do esse ea.\n\nEst sunt Lorem non laborum tempor laboris Lorem aute id fugiat enim. Pariatur amet quis voluptate dolore. Veniam nostrud consectetur sint pariatur ad dolor. Magna do ad non deserunt adipisicing officia cillum culpa."));
@@ -38,13 +41,18 @@ public class IdeaSimilarityAppBackendApplication {
             ideas.add(new IdeaDTO("8af6f8b6-0973-4992-8ea3-585d5efd7e10", "Profiling criminals"));
             ideas.add(new IdeaDTO("fb85b2da-bc85-4ecc-b44c-5e9b94a72238", "Security systems could use this technology to identify intruders."));
 
-			final String[][] pairs = new String[2][2];
-            pairs[0][0] = "cf65b021-620f-43fe-9473-1712be788cde";
-            pairs[0][1] = "207ed8be-e222-441c-bb86-3c75fc918208";
-            pairs[1][0] = "207ed8be-e222-441c-bb86-3c75fc918208";
-            pairs[1][1] = "6f7a5f9b-dc13-4467-a0e8-bc72a1b26025";
+			final String[][] pairArray = new String[2][2];
+            pairArray[0][0] = "cf65b021-620f-43fe-9473-1712be788cde";
+            pairArray[0][1] = "207ed8be-e222-441c-bb86-3c75fc918208";
+            pairArray[1][0] = "207ed8be-e222-441c-bb86-3c75fc918208";
+            pairArray[1][1] = "6f7a5f9b-dc13-4467-a0e8-bc72a1b26025";
 
-            distributorService.setMockData(new IdeaPairBatchDTO(challenges, ideas, pairs));
+            distributorService.setMockData(new IdeaPairBatchDTO(challenges, ideas, pairArray));
+
+            List<IdeaPair> pairs = new ArrayList<>();
+            pairs.add(new IdeaPair("cf65b021-620f-43fe-9473-1712be788cde","207ed8be-e222-441c-bb86-3c75fc918208"));
+            Batch testBatch = new Batch(pairs);
+            batchRepository.save(testBatch);
         };
     }
 }

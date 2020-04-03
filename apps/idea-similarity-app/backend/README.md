@@ -41,3 +41,27 @@ There is a swagger ui running at:
 ## Deployment
 
     ./gradlew jib
+    
+    
+## Usage
+
+Constructing the Initial Import:
+
+Manually create a json file with the following information:
+
+You can get the Idea Data by constructing a json-ld document like this:
+
+    PREFIX gi2mo: <http://purl.org/gi2mo/ns#>  
+    
+    CONSTRUCT { 
+      ?idea a gi2mo:Idea;
+        gi2mo:content ?content;
+        gi2mo:hasIdeaContest ?contest.
+    }
+    WHERE { 
+        ?idea a gi2mo:Idea;
+           gi2mo:content ?content;
+           gi2mo:hasIdeaContest ?contest.
+    }
+    LIMIT 10
+     
