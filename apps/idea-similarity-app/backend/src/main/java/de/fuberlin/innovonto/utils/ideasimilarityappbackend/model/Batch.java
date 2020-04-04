@@ -20,8 +20,10 @@ public class Batch {
     private UUID id;
     private LocalDateTime lastPublished;
     private BatchState batchState = BatchState.UNALLOCATED;
+    private String hitId;
+    private String workerId;
     private String assignmentId;
-    //TODO has MturkRatingSession (Nullable)
+
 
     @ManyToMany(cascade = CascadeType.ALL)
     private List<IdeaPair> pairs;
@@ -66,11 +68,44 @@ public class Batch {
         this.assignmentId = assignmentId;
     }
 
+    public String getHitId() {
+        return hitId;
+    }
+
+    public void setHitId(String hitId) {
+        this.hitId = hitId;
+    }
+
+    public String getWorkerId() {
+        return workerId;
+    }
+
+    public void setWorkerId(String workerId) {
+        this.workerId = workerId;
+    }
+
     public List<IdeaPair> getPairs() {
         return pairs;
     }
 
     public void setPairs(List<IdeaPair> pairs) {
         this.pairs = pairs;
+    }
+
+    @Override
+    public String toString() {
+        return "Batch{" +
+                "id=" + id +
+                ", lastPublished=" + lastPublished +
+                ", batchState=" + batchState +
+                ", hitId='" + hitId + '\'' +
+                ", workerId='" + workerId + '\'' +
+                ", assignmentId='" + assignmentId + '\'' +
+                ", pairs=" + pairs +
+                '}';
+    }
+
+    public String getHWA() {
+        return hitId + "|" + workerId + "|" + assignmentId;
     }
 }
