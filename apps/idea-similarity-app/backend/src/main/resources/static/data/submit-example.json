@@ -1,0 +1,16 @@
+{
+  "ratingProjectId":"mockproject",
+  "hitId": "h",
+  "workerId": "w",
+  "assignmentId": "a",
+  "fulltextFeedback": "This is fulltextFeedback",
+  "clarityRating": 0,
+  "passedAttentionCheck": true,
+  "ratings": [
+    {
+      "leftIdea": "cf65b021-620f-43fe-9473-1712be788cde",
+      "rightIdea": "207ed8be-e222-441c-bb86-3c75fc918208",
+      "similarityRating": 85
+    }
+  ]
+}

@@ -1,20 +1,34 @@
 package de.fuberlin.innovonto.utils.ideasimilarityappbackend.api.client;
 
+import javax.validation.constraints.NotBlank;
+
 public class RatedIdeaPairDTO {
-    private String id;
-    private long leftId;
-    private long rightId;
+
+    @NotBlank
+    private String leftIdea;
+    @NotBlank
+    private String rightIdea;
 
     private int similarityRating;
 
-    public String getId() {
-        return id;
+    public RatedIdeaPairDTO() {
     }
 
-    public void setId(String id) {
-        this.id = id;
+    public String getLeftIdea() {
+        return leftIdea;
     }
 
+    public void setLeftIdea(String leftIdea) {
+        this.leftIdea = leftIdea;
+    }
+
+    public String getRightIdea() {
+        return rightIdea;
+    }
+
+    public void setRightIdea(String rightIdea) {
+        this.rightIdea = rightIdea;
+    }
 
     public int getSimilarityRating() {
         return similarityRating;
@@ -22,29 +36,5 @@ public class RatedIdeaPairDTO {
 
     public void setSimilarityRating(int similarityRating) {
         this.similarityRating = similarityRating;
-    }
-
-    public long getRightId() {
-        return rightId;
-    }
-
-    public void setRightId(long rightId) {
-        this.rightId = rightId;
-    }
-
-    public long getLeftId() {
-        return leftId;
-    }
-
-    public void setLeftId(long leftId) {
-        this.leftId = leftId;
-    }
-
-    @Override
-    public String toString() {
-        return "RatingTaskResultItemDTO{" +
-                "id='" + id + '\'' +
-                ", similarityRating=" + similarityRating +
-                '}';
     }
 }

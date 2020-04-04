@@ -2,6 +2,7 @@ package de.fuberlin.innovonto.utils.ideasimilarityappbackend.api.client;
 
 import de.fuberlin.innovonto.utils.ideasimilarityappbackend.api.MturkSesssionInformationMissingException;
 import de.fuberlin.innovonto.utils.ideasimilarityappbackend.IdeaPairBatchDistributorService;
+import de.fuberlin.innovonto.utils.ideasimilarityappbackend.management.BatchState;
 import de.fuberlin.innovonto.utils.ideasimilarityappbackend.model.*;
 import org.json.JSONObject;
 import org.springframework.beans.factory.annotation.Autowired;
@@ -9,6 +10,7 @@ import org.springframework.http.MediaType;
 import org.springframework.web.bind.annotation.*;
 
 import javax.servlet.http.HttpServletRequest;
+import java.time.LocalDateTime;
 import java.util.*;
 import java.util.stream.Collectors;
 import java.util.stream.StreamSupport;
@@ -21,12 +23,18 @@ public class MturkClientRestController {
     private final IdeaPairBatchDistributorService distributorService;
     private final ChallengeRepository challengeRepository;
     private final IdeaRepository ideaRepository;
+    private final MturkRatingSessionRepository mturkRatingSessionRepository;
+    private final BatchRepository batchRepository;
+    private final RatingProjectRepository ratingProjectRepository;
 
     @Autowired
-    public MturkClientRestController(IdeaPairBatchDistributorService distributorService, ChallengeRepository challengeRepository, IdeaRepository ideaRepository) {
+    public MturkClientRestController(IdeaPairBatchDistributorService distributorService, ChallengeRepository challengeRepository, IdeaRepository ideaRepository, MturkRatingSessionRepository mturkRatingSessionRepository, BatchRepository batchRepository, RatingProjectRepository ratingProjectRepository) {
         this.distributorService = distributorService;
         this.challengeRepository = challengeRepository;
         this.ideaRepository = ideaRepository;
+        this.mturkRatingSessionRepository = mturkRatingSessionRepository;
+        this.batchRepository = batchRepository;
+        this.ratingProjectRepository = ratingProjectRepository;
     }
 
     @ResponseBody
@@ -66,16 +74,57 @@ public class MturkClientRestController {
         return new IdeaPairBatchDTO(challenges, ideas, pairs);
     }
 
-    @ResponseBody
     @PostMapping(value = "/rating/submit")
-    public MturkRatingSession submitRatingTask(MturkRatingSessionResultDTO result) {
-        if (result == null || isBlank(result.getHitId()) || isBlank(result.getAssignmentId()) || isBlank(result.getWorkerId())) {
-            throw new MturkSesssionInformationMissingException("Could not find mturk session information (HWA) on the result object.");
+    public MturkRatingSession submitRatingTask(@RequestBody MturkRatingSessionResultDTO submissionData) {
+        if (submissionData == null || isBlank(submissionData.getHitId()) || isBlank(submissionData.getAssignmentId()) || isBlank(submissionData.getWorkerId())) {
+            throw new MturkSesssionInformationMissingException("Could not find mturk session information (HWA) on the submissionData object.");
         }
-        //TODO convert DTOs to DB Objects
-        //TODO save the DB Objects
-        //TODO update the Batch: State, Published, Results
-        return new MturkRatingSession();
+        Optional<RatingProject> byRatingProjectId = ratingProjectRepository.findById(submissionData.getRatingProjectId());
+        if (!byRatingProjectId.isPresent()) {
+            throw new IllegalStateException("Tried to submit ratings without an allocated batch. AssignmentId is: " + submissionData.getAssignmentId());
+        } else {
+            RatingProject currentProject = byRatingProjectId.get();
+            Optional<Batch> byAssignmentId = batchRepository.findByAssignmentId(submissionData.getAssignmentId());
+            if (!byAssignmentId.isPresent()) {
+                throw new IllegalStateException("Tried to submit ratings without an allocated batch. AssignmentId is: " + submissionData.getAssignmentId());
+            } else {
+                final Batch sourceBatch = byAssignmentId.get();
+                //TODO compare HWA?
+                final List<RatedIdeaPairDTO> submissionDataRatings = submissionData.getRatings();
+                if (submissionDataRatings.size() != sourceBatch.getPairs().size()) {
+                    throw new IllegalStateException("Submission Data Ratings had size:" + submissionDataRatings.size() + " while source Batch pairs had size:" + sourceBatch.getPairs().size() + " aborting.");
+                }
+                final MturkRatingSession resultSession = new MturkRatingSession(submissionData);
+                final List<RatedIdeaPair> ratedIdeaPairs = new ArrayList<>(submissionDataRatings.size());
+                for (RatedIdeaPairDTO dto : submissionDataRatings) {
+                    final RatedIdeaPair ratingResult = new RatedIdeaPair();
+                    ratingResult.setHitId(submissionData.getHitId());
+                    ratingResult.setWorkerId(submissionData.getWorkerId());
+                    ratingResult.setAssignmentId(submissionData.getAssignmentId());
+                    ratingResult.setLeftIdea(dto.getLeftIdea());
+                    ratingResult.setRightIdea(dto.getRightIdea());
+                    ratingResult.setSimilarityRating(dto.getSimilarityRating());
+                    ratingResult.setReviewStatus(ReviewStatus.UNREVIEWED);
+                    ratedIdeaPairs.add(ratingResult);
+                }
+                resultSession.setRatings(ratedIdeaPairs);
+                resultSession.setReviewStatus(ReviewStatus.UNREVIEWED);
+                final MturkRatingSession savedSession = mturkRatingSessionRepository.save(resultSession);
+
+                sourceBatch.setBatchState(BatchState.SUBMITTED);
+                sourceBatch.setLastPublished(LocalDateTime.now());
+                sourceBatch.setResultsRatingSessionId(savedSession.getId());
+                batchRepository.save(sourceBatch);
+
+                List<MturkRatingSession> sessions = currentProject.getSessions();
+                if(sessions == null) {
+                    sessions = new ArrayList<>();
+                }
+                sessions.add(savedSession);
+                ratingProjectRepository.save(currentProject);
+                return savedSession;
+            }
+        }
     }
 
     //Debug View to See Mturk Submit Data:

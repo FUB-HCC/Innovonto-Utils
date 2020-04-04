@@ -1,7 +1,6 @@
 package de.fuberlin.innovonto.utils.ideasimilarityappbackend.model;
 
 import javax.persistence.*;
-import javax.validation.constraints.NotBlank;
 
 //TODO long-term: generify? float/double?
 @Entity
@@ -24,20 +23,10 @@ public class RatedIdeaPair {
 
     private int similarityRating;
 
-    private boolean usable;
+    private ReviewStatus reviewStatus = ReviewStatus.UNREVIEWED;
 
     //Hibernate
     public RatedIdeaPair() {
-    }
-
-    //TODO Constructor from DTO
-
-    public long getId() {
-        return id;
-    }
-
-    public void setId(long id) {
-        this.id = id;
     }
 
     public String getLeftIdea() {
@@ -88,11 +77,25 @@ public class RatedIdeaPair {
         this.similarityRating = similarityRating;
     }
 
-    public boolean isUsable() {
-        return usable;
+    public ReviewStatus getReviewStatus() {
+        return reviewStatus;
     }
 
-    public void setUsable(boolean usable) {
-        this.usable = usable;
+    public void setReviewStatus(ReviewStatus reviewStatus) {
+        this.reviewStatus = reviewStatus;
+    }
+
+    @Override
+    public String toString() {
+        return "RatedIdeaPair{" +
+                "id=" + id +
+                ", leftIdea='" + leftIdea + '\'' +
+                ", rightIdea='" + rightIdea + '\'' +
+                ", hitId='" + hitId + '\'' +
+                ", workerId='" + workerId + '\'' +
+                ", assignmentId='" + assignmentId + '\'' +
+                ", similarityRating=" + similarityRating +
+                ", reviewStatus=" + reviewStatus +
+                '}';
     }
 }

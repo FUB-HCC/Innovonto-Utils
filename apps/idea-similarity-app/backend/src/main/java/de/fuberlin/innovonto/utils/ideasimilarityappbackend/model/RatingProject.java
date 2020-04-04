@@ -1,5 +1,7 @@
 package de.fuberlin.innovonto.utils.ideasimilarityappbackend.model;
 
+import de.fuberlin.innovonto.utils.ideasimilarityappbackend.management.BatchState;
+
 import javax.persistence.CascadeType;
 import javax.persistence.Entity;
 import javax.persistence.Id;
@@ -18,7 +20,8 @@ public class RatingProject {
     @OneToMany(cascade = CascadeType.ALL)
     private List<Batch> batches;
 
-    //TODO has Results?
+    @OneToMany(cascade = CascadeType.ALL)
+    private List<MturkRatingSession> sessions;
 
     //Hibernate
     public RatingProject() {
@@ -44,5 +47,20 @@ public class RatingProject {
 
     public LocalDateTime getCreated() {
         return created;
+    }
+
+    public String getProgressState() {
+        int goalBatches = batches.size();
+        long batchesInProgress = batches.stream().filter((b) -> b.getBatchState().equals(BatchState.ALLOCATED)).count();
+        long batchesSubmitted = batches.stream().filter((b) -> b.getBatchState().equals(BatchState.SUBMITTED)).count();
+        return batchesSubmitted + "/" + goalBatches + " Submitted, " + batchesInProgress + " in progress.";
+    }
+
+    public List<MturkRatingSession> getSessions() {
+        return sessions;
+    }
+
+    public void setSessions(List<MturkRatingSession> sessions) {
+        this.sessions = sessions;
     }
 }

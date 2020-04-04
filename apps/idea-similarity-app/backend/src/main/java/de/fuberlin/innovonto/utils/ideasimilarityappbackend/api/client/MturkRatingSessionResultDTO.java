@@ -1,11 +1,13 @@
 package de.fuberlin.innovonto.utils.ideasimilarityappbackend.api.client;
 
 import javax.validation.constraints.NotBlank;
-import java.util.Arrays;
 import java.util.List;
 
 public class MturkRatingSessionResultDTO {
+
     //General:
+    @NotBlank
+    private String ratingProjectId;
     @NotBlank
     private String hitId;
     @NotBlank
@@ -16,6 +18,8 @@ public class MturkRatingSessionResultDTO {
     //Survey
     private String fulltextFeedback;
     private int clarityRating;
+
+    private boolean passedAttentionCheck = false;
 
     private List<RatedIdeaPairDTO> ratings;
 
@@ -62,6 +66,14 @@ public class MturkRatingSessionResultDTO {
         this.clarityRating = clarityRating;
     }
 
+    public boolean isPassedAttentionCheck() {
+        return passedAttentionCheck;
+    }
+
+    public void setPassedAttentionCheck(boolean passedAttentionCheck) {
+        this.passedAttentionCheck = passedAttentionCheck;
+    }
+
     public List<RatedIdeaPairDTO> getRatings() {
         return ratings;
     }
@@ -70,15 +82,25 @@ public class MturkRatingSessionResultDTO {
         this.ratings = ratings;
     }
 
+    public String getRatingProjectId() {
+        return ratingProjectId;
+    }
+
+    public void setRatingProjectId(String ratingProjectId) {
+        this.ratingProjectId = ratingProjectId;
+    }
+
     @Override
     public String toString() {
-        return "MturkSimilarityTaskResultDTO{" +
-                "hitId='" + hitId + '\'' +
+        return "MturkRatingSessionResultDTO{" +
+                "ratingProjectId='" + ratingProjectId + '\'' +
+                ", hitId='" + hitId + '\'' +
                 ", workerId='" + workerId + '\'' +
                 ", assignmentId='" + assignmentId + '\'' +
                 ", fulltextFeedback='" + fulltextFeedback + '\'' +
                 ", clarityRating=" + clarityRating +
-                ", ratings=" + (ratings == null ? null : Arrays.asList(ratings)) +
+                ", passedAttentionCheck=" + passedAttentionCheck +
+                ", ratings=" + ratings +
                 '}';
     }
 }

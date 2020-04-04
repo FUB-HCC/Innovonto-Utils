@@ -23,12 +23,12 @@ public class Batch {
     private String hitId;
     private String workerId;
     private String assignmentId;
+    private UUID resultsRatingSessionId;
 
-
+    //TODO warum ist das many to many?
     @ManyToMany(cascade = CascadeType.ALL)
     private List<IdeaPair> pairs;
 
-    //TODO link to requirements to calculate goal/current
     //TODO Batch State should be reset, when an assignment is approved but unusable
     //TODO When an assignment is rejected, the allocation SHOULD stay the same
     //hibernate
@@ -90,6 +90,14 @@ public class Batch {
 
     public void setPairs(List<IdeaPair> pairs) {
         this.pairs = pairs;
+    }
+
+    public UUID getResultsRatingSessionId() {
+        return resultsRatingSessionId;
+    }
+
+    public void setResultsRatingSessionId(UUID resultsRatingSessionId) {
+        this.resultsRatingSessionId = resultsRatingSessionId;
     }
 
     @Override

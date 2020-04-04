@@ -62,6 +62,8 @@ public class IdeaPairBatchDistributorService {
                             .filter((b) -> !b.getBatchState().equals(BatchState.SUBMITTED)).sorted(Comparator.comparing(Batch::getLastPublished)).collect(Collectors.toList());
                     if (isNotEmpty(unsubmittedBatches)) {
                         result = unsubmittedBatches.get(0);
+                        log.warn("RE-ALLOCATING UNSUBMITTED BATCH: " + result);
+                        log.warn("Old Allocation was: (" + result.getHWA() + "), new allocation will be: (" + hitId + "|" + workerId + "|" + assignmentId + "). Continuing.");
                     } else {
                         throw new IllegalStateException("Tried to allocate a batch for a project where all batches are already submitted.");
                     }
