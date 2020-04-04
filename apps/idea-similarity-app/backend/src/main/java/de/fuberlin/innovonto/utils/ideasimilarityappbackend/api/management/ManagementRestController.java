@@ -1,23 +1,30 @@
 package de.fuberlin.innovonto.utils.ideasimilarityappbackend.api.management;
 
+import de.fuberlin.innovonto.utils.ideasimilarityappbackend.management.BatchState;
 import de.fuberlin.innovonto.utils.ideasimilarityappbackend.management.Requirements;
 import de.fuberlin.innovonto.utils.ideasimilarityappbackend.management.RequirementsImporter;
-import de.fuberlin.innovonto.utils.ideasimilarityappbackend.model.RatingProject;
-import de.fuberlin.innovonto.utils.ideasimilarityappbackend.model.RatingProjectRepository;
+import de.fuberlin.innovonto.utils.ideasimilarityappbackend.model.*;
+import javassist.NotFoundException;
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.web.bind.annotation.*;
 
+import java.time.LocalDateTime;
 import java.util.Optional;
+import java.util.UUID;
 
 @RestController
 @RequestMapping("/api/management/")
 public class ManagementRestController {
     private final RatingProjectRepository ratingProjectRepository;
+    private final MturkRatingSessionRepository ratingSessionRepository;
+    private final BatchRepository batchRepository;
     private final RequirementsImporter requirementsImporter;
 
     @Autowired
-    public ManagementRestController(RatingProjectRepository ratingProjectRepository, RequirementsImporter requirementsImporter) {
+    public ManagementRestController(RatingProjectRepository ratingProjectRepository, MturkRatingSessionRepository ratingSessionRepository, BatchRepository batchRepository, RequirementsImporter requirementsImporter) {
         this.ratingProjectRepository = ratingProjectRepository;
+        this.ratingSessionRepository = ratingSessionRepository;
+        this.batchRepository = batchRepository;
         this.requirementsImporter = requirementsImporter;
     }
 
@@ -40,8 +47,56 @@ public class ManagementRestController {
         return ratingProjectRepository.findById(id);
     }
 
-    //Find results by assignmentId
+    //TODO add Display Object for MturkRating Session, to make reviewing a session easier.
+    @GetMapping("/mturkRatingSessions/byAssignment")
+    public Optional<MturkRatingSession> getByAssignmentId(@RequestParam String assignmentId) {
+        return ratingSessionRepository.findByAssignmentId(assignmentId);
+    }
 
-    //Reset a batch (Update Batch-Status to: unallocated)
-    //Approve a batch
+    @GetMapping("/mturkRatingSessions/{mturkSessionId}/set-usable")
+    public MturkRatingSession setUsable(@PathVariable UUID mturkSessionId) throws NotFoundException {
+        Optional<MturkRatingSession> byId =  ratingSessionRepository.findById(mturkSessionId);
+        if(byId.isEmpty()) {
+            throw new NotFoundException("Could not find session with id: " + mturkSessionId);
+        } else {
+            final MturkRatingSession session = byId.get();
+            session.setReviewStatus(ReviewStatus.USABLE);
+            session.setReviewed(LocalDateTime.now());
+            for(RatedIdeaPair rating : session.getRatings()) {
+                rating.setReviewStatus(ReviewStatus.USABLE);
+            }
+            return ratingSessionRepository.save(session);
+        }
+    }
+
+    @GetMapping("/mturkRatingSessions/{mturkSessionId}/set-unusable")
+    public MturkRatingSession setUnusable(@PathVariable String mturkSessionId) throws NotFoundException {
+        Optional<MturkRatingSession> byId =  ratingSessionRepository.findById(UUID.fromString(mturkSessionId));
+        if(byId.isEmpty()) {
+            throw new NotFoundException("Could not find session with id: " + mturkSessionId);
+        } else {
+            final MturkRatingSession session = byId.get();
+            Optional<Batch> byResultId = batchRepository.findByResultsRatingSessionId(session.getId());
+            if(byResultId.isEmpty()) {
+                throw new NotFoundException("Could not find source batch for session with id: " + mturkSessionId);
+            } else {
+                session.setReviewStatus(ReviewStatus.UNUSABLE);
+                session.setReviewed(LocalDateTime.now());
+                for(RatedIdeaPair rating : session.getRatings()) {
+                    rating.setReviewStatus(ReviewStatus.UNUSABLE);
+                }
+
+                final Batch sourceBatch = byResultId.get();
+                sourceBatch.setSubmitted(null);
+                sourceBatch.setBatchState(BatchState.UNALLOCATED);
+                sourceBatch.setHitId(null);
+                sourceBatch.setWorkerId(null);
+                sourceBatch.setAssignmentId(null);
+                sourceBatch.setResultsRatingSessionId(null);
+                batchRepository.save(sourceBatch);
+
+                return ratingSessionRepository.save(session);
+            }
+        }
+    }
 }

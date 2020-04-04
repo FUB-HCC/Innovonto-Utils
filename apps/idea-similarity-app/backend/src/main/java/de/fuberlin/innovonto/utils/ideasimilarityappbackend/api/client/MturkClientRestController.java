@@ -80,12 +80,12 @@ public class MturkClientRestController {
             throw new MturkSesssionInformationMissingException("Could not find mturk session information (HWA) on the submissionData object.");
         }
         Optional<RatingProject> byRatingProjectId = ratingProjectRepository.findById(submissionData.getRatingProjectId());
-        if (!byRatingProjectId.isPresent()) {
+        if (byRatingProjectId.isEmpty()) {
             throw new IllegalStateException("Tried to submit ratings without an allocated batch. AssignmentId is: " + submissionData.getAssignmentId());
         } else {
             RatingProject currentProject = byRatingProjectId.get();
             Optional<Batch> byAssignmentId = batchRepository.findByAssignmentId(submissionData.getAssignmentId());
-            if (!byAssignmentId.isPresent()) {
+            if (byAssignmentId.isEmpty()) {
                 throw new IllegalStateException("Tried to submit ratings without an allocated batch. AssignmentId is: " + submissionData.getAssignmentId());
             } else {
                 final Batch sourceBatch = byAssignmentId.get();
@@ -112,6 +112,7 @@ public class MturkClientRestController {
                 final MturkRatingSession savedSession = mturkRatingSessionRepository.save(resultSession);
 
                 sourceBatch.setBatchState(BatchState.SUBMITTED);
+                sourceBatch.setSubmitted(LocalDateTime.now());
                 sourceBatch.setLastPublished(LocalDateTime.now());
                 sourceBatch.setResultsRatingSessionId(savedSession.getId());
                 batchRepository.save(sourceBatch);

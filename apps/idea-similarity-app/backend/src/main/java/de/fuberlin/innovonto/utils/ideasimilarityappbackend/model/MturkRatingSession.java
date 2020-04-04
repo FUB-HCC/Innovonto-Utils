@@ -5,6 +5,7 @@ import org.hibernate.annotations.GenericGenerator;
 
 import javax.persistence.*;
 import javax.validation.constraints.NotBlank;
+import java.time.LocalDateTime;
 import java.util.List;
 import java.util.UUID;
 
@@ -17,6 +18,9 @@ public class MturkRatingSession {
             strategy = "de.fuberlin.innovonto.utils.common.FallbackUUIDGenerator"
     )
     private UUID id;
+    //Metadata
+    private LocalDateTime submitted;
+    private LocalDateTime reviewed;
 
     //General:
     @NotBlank
@@ -48,6 +52,7 @@ public class MturkRatingSession {
         this.fulltextFeedback = submissionData.getFulltextFeedback();
         this.clarityRating = submissionData.getClarityRating();
         this.passedAttentionCheck = submissionData.isPassedAttentionCheck();
+        this.submitted = LocalDateTime.now();
     }
 
     public UUID getId() {
@@ -120,5 +125,17 @@ public class MturkRatingSession {
 
     public void setRatings(List<RatedIdeaPair> ratings) {
         this.ratings = ratings;
+    }
+
+    public LocalDateTime getSubmitted() {
+        return submitted;
+    }
+
+    public void setReviewed(LocalDateTime reviewed) {
+        this.reviewed = reviewed;
+    }
+
+    public LocalDateTime getReviewed() {
+        return reviewed;
     }
 }

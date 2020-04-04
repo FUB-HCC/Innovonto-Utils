@@ -18,7 +18,10 @@ public class Batch {
             strategy = "de.fuberlin.innovonto.utils.common.FallbackUUIDGenerator"
     )
     private UUID id;
+    private LocalDateTime created;
     private LocalDateTime lastPublished;
+    private LocalDateTime submitted;
+
     private BatchState batchState = BatchState.UNALLOCATED;
     private String hitId;
     private String workerId;
@@ -29,10 +32,9 @@ public class Batch {
     @ManyToMany(cascade = CascadeType.ALL)
     private List<IdeaPair> pairs;
 
-    //TODO Batch State should be reset, when an assignment is approved but unusable
-    //TODO When an assignment is rejected, the allocation SHOULD stay the same
     //hibernate
     public Batch() {
+        this.created = LocalDateTime.now();
     }
 
     public UUID getId() {
@@ -58,6 +60,18 @@ public class Batch {
 
     public void setBatchState(BatchState batchState) {
         this.batchState = batchState;
+    }
+
+    public LocalDateTime getCreated() {
+        return created;
+    }
+
+    public LocalDateTime getSubmitted() {
+        return submitted;
+    }
+
+    public void setSubmitted(LocalDateTime submitted) {
+        this.submitted = submitted;
     }
 
     public String getAssignmentId() {
