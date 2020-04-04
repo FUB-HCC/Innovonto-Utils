@@ -1,6 +1,7 @@
 package de.fuberlin.innovonto.utils.ideasimilarityappbackend.api.management;
 
 import de.fuberlin.innovonto.utils.ideasimilarityappbackend.management.Requirements;
+import de.fuberlin.innovonto.utils.ideasimilarityappbackend.management.RequirementsImporter;
 import de.fuberlin.innovonto.utils.ideasimilarityappbackend.model.RatingProject;
 import de.fuberlin.innovonto.utils.ideasimilarityappbackend.model.RatingProjectRepository;
 import org.springframework.beans.factory.annotation.Autowired;
@@ -12,16 +13,19 @@ import java.util.Optional;
 @RequestMapping("/api/management/")
 public class ManagementRestController {
     private final RatingProjectRepository ratingProjectRepository;
+    private final RequirementsImporter requirementsImporter;
 
     @Autowired
-    public ManagementRestController(RatingProjectRepository ratingProjectRepository) {
+    public ManagementRestController(RatingProjectRepository ratingProjectRepository, RequirementsImporter requirementsImporter) {
         this.ratingProjectRepository = ratingProjectRepository;
+        this.requirementsImporter = requirementsImporter;
     }
 
     //Upload Requirements
     @PostMapping("/requirements/")
-    public String uploadRequirements(@RequestBody Requirements requirements) {
-        return "{\"status\":\"ok\"}";
+    public RatingProject uploadRequirements(@RequestBody Requirements requirements) {
+        requirementsImporter.validateRequirements(requirements);
+        return requirementsImporter.saveRequirementsAsProject(requirements);
     }
 
     //See all RatingProjects

@@ -23,8 +23,7 @@ public class Batch {
     private String assignmentId;
     //TODO has MturkRatingSession (Nullable)
 
-    //TODO why is this not rendered?
-    @OneToMany(cascade = CascadeType.ALL)
+    @ManyToMany(cascade = CascadeType.ALL)
     private List<IdeaPair> pairs;
 
     //TODO link to requirements to calculate goal/current

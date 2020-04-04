@@ -1,5 +1,11 @@
 {
   "id": "test-collection-round",
+  "challenges": [
+    {
+      "@id": "https://innovonto-core.imp.fu-berlin.de/entities/ideaContests/i2m-bionic-radar",
+      "description": "The second idea contest within the Ideas-to-Market Project. The Fraunhofer FHR, which provided a new radar technology (called Bionic Radar) that uses machine learning to uniquely detect movement patterns via radar, working even in bad weather."
+    }
+  ],
   "ideas": [
     {
       "@id": "https://innovonto-core.imp.fu-berlin.de/entities/ideas/1993da2b-008e-44de-aa1f-20f91df22123",

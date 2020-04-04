@@ -1,5 +1,7 @@
 package de.fuberlin.innovonto.utils.ideasimilarityappbackend.model;
 
+import com.fasterxml.jackson.annotation.JsonSetter;
+
 import javax.persistence.Column;
 import javax.persistence.Entity;
 import javax.persistence.Id;
@@ -22,6 +24,11 @@ public class Challenge {
 
     public String getId() {
         return id;
+    }
+
+    @JsonSetter("@id")
+    public void setIdFromJson(String id) {
+        this.id = id;
     }
 
     public void setId(String id) {

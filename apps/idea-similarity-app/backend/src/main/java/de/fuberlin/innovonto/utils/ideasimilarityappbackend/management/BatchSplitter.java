@@ -3,6 +3,7 @@ package de.fuberlin.innovonto.utils.ideasimilarityappbackend.management;
 
 import de.fuberlin.innovonto.utils.ideasimilarityappbackend.model.Batch;
 import de.fuberlin.innovonto.utils.ideasimilarityappbackend.model.IdeaPair;
+import org.springframework.stereotype.Service;
 
 import java.util.ArrayList;
 import java.util.Collection;
@@ -23,13 +24,14 @@ import java.util.stream.Collectors;
  * Requirements:
  * Kein Pair doppelt in einem Batch
  */
+@Service
 public class BatchSplitter {
 
     public List<Batch> createBatchesFor(Requirements requirements) {
         final List<Batch> result = new ArrayList<>((requirements.getPairs().size() / requirements.getBatchSize()) * requirements.getGoalRatingsPerPair());
         final AtomicInteger counter = new AtomicInteger();
 
-        //TODO randomize here or not?
+        //TODO randomize here or not? currently I'm randomizing in the MturkClientRestController
         final Collection<List<IdeaPair>> chunks = requirements.getPairs().stream()
                 .collect(Collectors.groupingBy(it -> counter.getAndIncrement() / requirements.getBatchSize()))
                 .values();

@@ -39,7 +39,6 @@ public class MturkClientRestController {
 
         final Batch batchForCurrentAssignment = distributorService.allocateBatchFor(ratingProjectId, hitId, workerId, assignmentId);
 
-        //TODO convertBatch to DTO
         //Step 1: Go through all pairs: collect ideaIds
         final Set<UUID> ideaIds = new HashSet<>();
         for (IdeaPair pair : batchForCurrentAssignment.getPairs()) {
@@ -60,8 +59,11 @@ public class MturkClientRestController {
             Challenge value = challengeRepository.findById(challengeId).get();
             challenges.put(value.getId(), value);
         }
-        //Step 4: Put everything into one object
-        return new IdeaPairBatchDTO(challenges, ideas, batchForCurrentAssignment.getPairs());
+        //Step 4: Randomize the ordering of the pairs
+        List<IdeaPair> pairs = batchForCurrentAssignment.getPairs();
+        Collections.shuffle(pairs);
+        //Step 5: Put everything into one object
+        return new IdeaPairBatchDTO(challenges, ideas, pairs);
     }
 
     @ResponseBody

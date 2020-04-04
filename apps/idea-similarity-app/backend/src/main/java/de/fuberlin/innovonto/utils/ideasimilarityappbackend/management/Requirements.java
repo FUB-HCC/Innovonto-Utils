@@ -1,6 +1,7 @@
 package de.fuberlin.innovonto.utils.ideasimilarityappbackend.management;
 
 import com.fasterxml.jackson.annotation.JsonIgnoreProperties;
+import de.fuberlin.innovonto.utils.ideasimilarityappbackend.model.Challenge;
 import de.fuberlin.innovonto.utils.ideasimilarityappbackend.model.Idea;
 import de.fuberlin.innovonto.utils.ideasimilarityappbackend.model.IdeaPair;
 
@@ -10,6 +11,7 @@ import java.util.List;
 public class Requirements {
     private String id;
     private List<Idea> ideas;
+    private List<Challenge> challenges;
     private List<IdeaPair> pairs;
     private int goalRatingsPerPair;
     private int batchSize;
@@ -52,5 +54,13 @@ public class Requirements {
 
     public void setBatchSize(int batchSize) {
         this.batchSize = batchSize;
+    }
+
+    public List<Challenge> getChallenges() {
+        return challenges;
+    }
+
+    public void setChallenges(List<Challenge> challenges) {
+        this.challenges = challenges;
     }
 }

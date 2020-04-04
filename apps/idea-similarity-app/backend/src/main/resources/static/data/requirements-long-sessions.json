@@ -1,6 +1,7 @@
 {
   "ideas": [],
+  "challenges": [],
   "pairs": [],
-  "goal-number-of-ratings": 5,
-  "batch-size": 56
+  "goalRatingsPerPair": 5,
+  "batchSize": 56
 }
