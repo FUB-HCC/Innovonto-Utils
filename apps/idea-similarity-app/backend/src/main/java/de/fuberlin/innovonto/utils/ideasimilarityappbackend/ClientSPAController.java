@@ -1,4 +1,4 @@
-package de.fuberlin.innovonto.utils.ideasimilarityappbackend.client;
+package de.fuberlin.innovonto.utils.ideasimilarityappbackend;
 
 public class ClientSPAController {
 

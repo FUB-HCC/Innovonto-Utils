@@ -1,21 +1,25 @@
 package de.fuberlin.innovonto.utils.ideasimilarityappbackend.management;
 
-import com.google.gson.Gson;
-import com.google.gson.GsonBuilder;
+import com.fasterxml.jackson.core.JsonProcessingException;
+import com.fasterxml.jackson.databind.DeserializationFeature;
+import com.fasterxml.jackson.databind.ObjectMapper;
+import com.fasterxml.jackson.databind.module.SimpleModule;
+import de.fuberlin.innovonto.utils.ideasimilarityappbackend.jackson.IdeaPairDeserializer;
+import de.fuberlin.innovonto.utils.ideasimilarityappbackend.jackson.IdeaPairSerializer;
 import de.fuberlin.innovonto.utils.ideasimilarityappbackend.model.IdeaPair;
-import de.fuberlin.innovonto.utils.ideasimilarityappbackend.model.IdeaPairDeserializer;
-import de.fuberlin.innovonto.utils.ideasimilarityappbackend.model.IdeaPairSerializer;
 
 public class RequirementsImporter {
 
-    public Requirements importRequirements(String jsonInput) {
-        //Step 1: Import from JSON
-        final Gson gson = new GsonBuilder()
-                .registerTypeAdapter(IdeaPair.class, new IdeaPairDeserializer())
-                .registerTypeAdapter(IdeaPair.class, new IdeaPairSerializer())
-                .create();
+    public Requirements importRequirements(String jsonInput) throws JsonProcessingException {
+        ObjectMapper mapper = new ObjectMapper();
+        mapper.configure(DeserializationFeature.FAIL_ON_UNKNOWN_PROPERTIES, false);
+        SimpleModule module = new SimpleModule();
+        module.addSerializer(IdeaPair.class, new IdeaPairSerializer());
+        module.addDeserializer(IdeaPair.class,new IdeaPairDeserializer());
+        mapper.registerModule(module);
 
-        final Requirements importedRequirements = gson.fromJson(jsonInput, Requirements.class);
+        //Step 1: Import from JSON
+        final Requirements importedRequirements = mapper.readValue(jsonInput, Requirements.class);
         //Step 2: Check if already existing id
         //TODO data transformation: transform ideas to local id: here or elsewhere?
         //Step 3: Check That all ideas are present

@@ -1,5 +1,6 @@
-package de.fuberlin.innovonto.utils.ideasimilarityappbackend.management;
+package de.fuberlin.innovonto.utils.ideasimilarityappbackend.model;
 
+import de.fuberlin.innovonto.utils.ideasimilarityappbackend.management.BatchState;
 import de.fuberlin.innovonto.utils.ideasimilarityappbackend.model.IdeaPair;
 import org.hibernate.annotations.GenericGenerator;
 
@@ -20,7 +21,9 @@ public class Batch {
     private LocalDateTime lastPublished;
     private BatchState batchState = BatchState.UNALLOCATED;
     private String assignmentId;
+    //TODO has MturkRatingSession (Nullable)
 
+    //TODO why is this not rendered?
     @OneToMany(cascade = CascadeType.ALL)
     private List<IdeaPair> pairs;
 
@@ -62,5 +65,13 @@ public class Batch {
 
     public void setAssignmentId(String assignmentId) {
         this.assignmentId = assignmentId;
+    }
+
+    public List<IdeaPair> getPairs() {
+        return pairs;
+    }
+
+    public void setPairs(List<IdeaPair> pairs) {
+        this.pairs = pairs;
     }
 }

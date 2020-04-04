@@ -1,10 +1,12 @@
 package de.fuberlin.innovonto.utils.ideasimilarityappbackend.management;
 
+import com.fasterxml.jackson.annotation.JsonIgnoreProperties;
 import de.fuberlin.innovonto.utils.ideasimilarityappbackend.model.Idea;
 import de.fuberlin.innovonto.utils.ideasimilarityappbackend.model.IdeaPair;
 
 import java.util.List;
 
+@JsonIgnoreProperties(ignoreUnknown = true)
 public class Requirements {
     private String id;
     private List<Idea> ideas;

@@ -4,7 +4,7 @@ This project is based on the following stack:
 * [java (openjdk 14)](https://openjdk.java.net/projects/jdk/14/)
 * [Gradle](https://gradle.org/)
 * [Spring Boot](https://spring.io/projects/spring-boot)
-* [Spring Data Rest](https://docs.spring.io/spring-data/rest/docs/current/reference/html/)
+* [Springdoc OpenAPI](https://springdoc.org/)
 * [Docker](https://www.docker.com/)
 * [Google Jib Plugin for Gradle](https://github.com/GoogleContainerTools/jib)
 * [Gitlab docker registry](https://docs.gitlab.com/ee/user/project/container_registry.html)
@@ -26,12 +26,22 @@ Running the standalone server created by the gradle bootJar task:
         
         java -jar idea-similarity-app-backend-0.0.1-SNAPSHOT.jar
         
-        curl "http://localhost:8080/api"
-        
-There is a swagger ui running at:
+        curl "http://localhost:8080/api"        
+
+For debugging, there is a swagger ui running at:
 
         http://localhost:8080/swagger-ui.html
         
+Furthermore, there is a h2 console running at:
+
+    http://localhost:8080/h2-console/
+   
+The Debug Config for it is:
+
+    Driver Class: org.h2.Driver
+    JDBC URL: jdbc:h2:mem:testdb
+    User Name: sa
+    Password: <empty>
 
 ### Run local docker-container
     

@@ -1,6 +1,6 @@
-package de.fuberlin.innovonto.utils.ideasimilarityappbackend.api.results;
+package de.fuberlin.innovonto.utils.ideasimilarityappbackend.api.client;
 
-public class MturkSimilarityRatingDTO {
+public class RatedIdeaPairDTO {
     private String id;
     private long leftId;
     private long rightId;

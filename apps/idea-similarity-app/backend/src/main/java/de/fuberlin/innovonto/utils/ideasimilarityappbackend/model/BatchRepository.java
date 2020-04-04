@@ -1,4 +1,4 @@
-package de.fuberlin.innovonto.utils.ideasimilarityappbackend.management;
+package de.fuberlin.innovonto.utils.ideasimilarityappbackend.model;
 
 import org.springframework.data.repository.CrudRepository;
 

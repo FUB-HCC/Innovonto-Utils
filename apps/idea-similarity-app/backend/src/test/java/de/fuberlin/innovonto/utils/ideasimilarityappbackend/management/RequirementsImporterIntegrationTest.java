@@ -1,5 +1,7 @@
 package de.fuberlin.innovonto.utils.ideasimilarityappbackend.management;
 
+import com.fasterxml.jackson.core.JsonProcessingException;
+import de.fuberlin.innovonto.utils.ideasimilarityappbackend.model.Batch;
 import org.junit.jupiter.api.Test;
 
 import java.io.IOException;
@@ -22,7 +24,7 @@ class RequirementsImporterIntegrationTest {
     }
 
     @Test
-    public void testFullCircle() {
+    public void testFullCircle() throws JsonProcessingException {
         System.out.println("Setting up!");
         RequirementsImporter importer = new RequirementsImporter();
         BatchSplitter batchSplitter = new BatchSplitter();

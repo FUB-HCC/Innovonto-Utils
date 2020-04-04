@@ -1,7 +1,14 @@
 package de.fuberlin.innovonto.utils.ideasimilarityappbackend.model;
 
+import com.fasterxml.jackson.databind.annotation.JsonDeserialize;
+import com.fasterxml.jackson.databind.annotation.JsonSerialize;
+import de.fuberlin.innovonto.utils.ideasimilarityappbackend.jackson.IdeaPairDeserializer;
+import de.fuberlin.innovonto.utils.ideasimilarityappbackend.jackson.IdeaPairSerializer;
+
 import javax.persistence.*;
 
+@JsonDeserialize(using = IdeaPairDeserializer.class)
+@JsonSerialize(using = IdeaPairSerializer.class)
 @Entity
 public class IdeaPair {
     @Id
@@ -12,6 +19,8 @@ public class IdeaPair {
     private String leftIdea;
     @Column(length = 2_000)
     private String rightIdea;
+
+    //TODO has RatedIdeaPair (Nullable)
 
     //hibernate
     public IdeaPair() {

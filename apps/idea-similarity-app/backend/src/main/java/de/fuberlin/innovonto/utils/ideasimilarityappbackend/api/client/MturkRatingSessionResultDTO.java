@@ -1,11 +1,10 @@
-package de.fuberlin.innovonto.utils.ideasimilarityappbackend.api.results;
-
-import de.fuberlin.innovonto.utils.ideasimilarityappbackend.api.results.MturkSimilarityRatingDTO;
+package de.fuberlin.innovonto.utils.ideasimilarityappbackend.api.client;
 
 import javax.validation.constraints.NotBlank;
 import java.util.Arrays;
+import java.util.List;
 
-public class MturkSimilarityTaskResultDTO {
+public class MturkRatingSessionResultDTO {
     //General:
     @NotBlank
     private String hitId;
@@ -18,9 +17,9 @@ public class MturkSimilarityTaskResultDTO {
     private String fulltextFeedback;
     private int clarityRating;
 
-    private MturkSimilarityRatingDTO[] ratings;
+    private List<RatedIdeaPairDTO> ratings;
 
-    public MturkSimilarityTaskResultDTO() {
+    public MturkRatingSessionResultDTO() {
     }
 
     public String getHitId() {
@@ -63,11 +62,11 @@ public class MturkSimilarityTaskResultDTO {
         this.clarityRating = clarityRating;
     }
 
-    public MturkSimilarityRatingDTO[] getRatings() {
+    public List<RatedIdeaPairDTO> getRatings() {
         return ratings;
     }
 
-    public void setRatings(MturkSimilarityRatingDTO[] ratings) {
+    public void setRatings(List<RatedIdeaPairDTO> ratings) {
         this.ratings = ratings;
     }
 

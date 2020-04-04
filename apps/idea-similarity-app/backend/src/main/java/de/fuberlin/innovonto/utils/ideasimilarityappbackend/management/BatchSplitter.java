@@ -1,6 +1,7 @@
 package de.fuberlin.innovonto.utils.ideasimilarityappbackend.management;
 
 
+import de.fuberlin.innovonto.utils.ideasimilarityappbackend.model.Batch;
 import de.fuberlin.innovonto.utils.ideasimilarityappbackend.model.IdeaPair;
 
 import java.util.ArrayList;
