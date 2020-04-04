@@ -20,8 +20,6 @@ public class IdeaPair {
     @Column(length = 2_000)
     private String rightIdea;
 
-    //TODO has RatedIdeaPair (Nullable)
-
     //hibernate
     public IdeaPair() {
     }
