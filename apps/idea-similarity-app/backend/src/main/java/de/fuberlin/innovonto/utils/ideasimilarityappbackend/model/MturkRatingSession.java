@@ -19,6 +19,7 @@ public class MturkRatingSession {
     )
     private UUID id;
     //Metadata
+    //TODO accepted
     private LocalDateTime submitted;
     private LocalDateTime reviewed;
 
@@ -29,6 +30,8 @@ public class MturkRatingSession {
     private String workerId;
     @NotBlank
     private String assignmentId;
+    @NotBlank
+    private String ratingProjectId;
 
     //Survey
     private String fulltextFeedback;
@@ -49,6 +52,7 @@ public class MturkRatingSession {
         this.hitId = submissionData.getHitId();
         this.workerId = submissionData.getWorkerId();
         this.assignmentId = submissionData.getAssignmentId();
+        this.ratingProjectId = submissionData.getRatingProjectId();
         this.fulltextFeedback = submissionData.getFulltextFeedback();
         this.clarityRating = submissionData.getClarityRating();
         this.passedAttentionCheck = submissionData.isPassedAttentionCheck();
@@ -137,5 +141,13 @@ public class MturkRatingSession {
 
     public LocalDateTime getReviewed() {
         return reviewed;
+    }
+
+    public String getRatingProjectId() {
+        return ratingProjectId;
+    }
+
+    public void setRatingProjectId(String ratingProjectId) {
+        this.ratingProjectId = ratingProjectId;
     }
 }

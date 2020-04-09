@@ -29,6 +29,10 @@ public class RatedIdeaPair {
     public RatedIdeaPair() {
     }
 
+    public long getId() {
+        return id;
+    }
+
     public String getLeftIdea() {
         return leftIdea;
     }

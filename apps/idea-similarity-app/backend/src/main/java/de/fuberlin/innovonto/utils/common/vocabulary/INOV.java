@@ -111,12 +111,6 @@ public class INOV {
 
     public static final Property hasInspiration = m.createProperty(uri, "hasInspiration");
 
-
-    //Mturk TODO aufräumen
-    public static final Property eventType = m.createProperty(uri, "eventType");
-    public static final Property submittedIdea = m.createProperty(uri, "submittedIdea");
-    public static final Property annotatorSubmit = m.createProperty(uri, "annotatorSubmit");
-
     //Survey Answers
     public static final Property acceptTime = m.createProperty(uri, "acceptTime");
     public static final Property submitTime = m.createProperty(uri, "submitTime");

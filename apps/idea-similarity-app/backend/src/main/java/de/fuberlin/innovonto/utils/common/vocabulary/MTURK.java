@@ -22,6 +22,7 @@ public class MTURK {
     private static final Model m = ModelFactory.createDefaultModel();
 
     public static final Resource HIT = m.createResource(uri + "HIT");
+    public static final Resource mturkSession = m.createResource(uri + "MturkSession");
     public static final Resource ANNOTATION = m.createResource(uri + "Annotation");
 
 
@@ -29,6 +30,7 @@ public class MTURK {
     public static final Property hitId = m.createProperty(uri, "hitId");
     public static final Property workerId = m.createProperty(uri, "workerId");
 
+    public static final Property hasMturkSession = m.createProperty(uri, "hasMturkSession");
 
     //Tracking
     public static final Resource BrainstormingSession = m.createResource(uri + "BrainstormingSession");

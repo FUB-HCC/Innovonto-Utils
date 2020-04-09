@@ -22,17 +22,25 @@ public class OID {
 
     //TODO CeRRI Ideas Stuff
     //TODO maybe group phase stuff? filtered, enhanced, contentGerman, userRole
-    public static final Property legacyStatus  = m.createProperty(uri, "status");
+    public static final Property legacyStatus = m.createProperty(uri, "status");
 
-    //TODO MTURK STUFF
-    public static final String HIT_PREFIX = "http://purl.org/innovonto/i2m-legacy/mturk/hit/";
-    public static final String ASSIGNMENT_PREFIX = "http://purl.org/innovonto/i2m-legacy/mturk/assignment/";
+    //TODO Similarity Ratings
+    public static final String MX_MASTER_PREFIX = "http://purl.org/innovonto/mx-master/similarities/";
+    public static final String RATING_PREFIX = MX_MASTER_PREFIX + "ratings/";
+    public static final String RATING_PROJECT_PREFIX = MX_MASTER_PREFIX + "ratingProjects/";
+    public static final String MTURK_SESSION_PREFIX = MX_MASTER_PREFIX + "mturkSessions/";
 
-    public static final Resource HIT = m.createResource(uri + "HIT");
-    public static final Property hitId  = m.createProperty(uri, "hitId");
-    public static final Property assignmentId  = m.createProperty(uri, "assignmentId");
+    public static final Resource SimilarityRating = m.createResource(uri + "SimilarityRating");
+    public static final Resource RatingProject = m.createResource(uri + "RatingProject");
 
-    //TODO CSCW STUFF
-    public static final Resource Annotation = m.createResource(uri + "Annotation");
-    public static final Property hasAnnotationResult  = m.createProperty(uri, "hasAnnotationResult");
+    public static final Property hasRatingProject = m.createProperty(uri, "hasRatingProject");
+    public static final Property hasSimilarityRating = m.createProperty(uri,"hasSimilarityRating");
+
+    public static final Property hasLeftIdea = m.createProperty(uri,"hasLeftIdea");
+    public static final Property hasRightIdea = m.createProperty(uri,"hasRightIdea");
+
+    //TODO move to survey-data format
+    public static final Property fulltextFeedback = m.createProperty(uri,"fulltextFeedback");
+    public static final Property clarityRating = m.createProperty(uri,"clarityRating");
+
 }
