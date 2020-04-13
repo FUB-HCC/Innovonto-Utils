@@ -17,6 +17,9 @@ jib {
 		//TODO think about: jib.to.image = 'gcr.io/my-gcp-project/my-app:' + System.nanoTime()
 		tags = ['latest']
 	}
+	container {
+		volumes = ["/database","/logs"]
+	}
 }
 
 configurations {
