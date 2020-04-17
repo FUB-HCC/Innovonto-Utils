@@ -81,7 +81,10 @@ public class MturkClientRestController {
     }
 
     @PostMapping(value = "/rating/submit")
-    @CrossOrigin(methods = RequestMethod.POST)
+    @CrossOrigin(
+            origins = "*",
+            allowedHeaders = "*",
+            methods = {RequestMethod.GET, RequestMethod.POST})
     public MturkRatingSession submitRatingTask(@RequestBody MturkRatingSessionResultDTO submissionData) {
         if (submissionData == null || isBlank(submissionData.getHitId()) || isBlank(submissionData.getAssignmentId()) || isBlank(submissionData.getWorkerId())) {
             throw new MturkSesssionInformationMissingException("Could not find mturk session information (HWA) on the submissionData object.");
