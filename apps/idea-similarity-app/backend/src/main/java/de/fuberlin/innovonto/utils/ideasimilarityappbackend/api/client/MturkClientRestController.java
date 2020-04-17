@@ -86,7 +86,6 @@ public class MturkClientRestController {
         }
         //Step 4: Randomize the ordering of the pairs
         List<IdeaPair> pairs = batchForCurrentAssignment.getPairs();
-        Collections.shuffle(pairs);
         //Step 5: Put everything into one object
         log.info(ratingProjectId + ": Returning batch for " + batchForCurrentAssignment.getHWA() + ", consisting of " + pairs.size() + " pairs.");
         return new IdeaPairBatchDTO(challenges, ideas, pairs);
