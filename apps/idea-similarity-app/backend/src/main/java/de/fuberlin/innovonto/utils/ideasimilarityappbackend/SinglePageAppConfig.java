@@ -5,6 +5,7 @@ import org.springframework.context.annotation.Configuration;
 import org.springframework.core.io.ClassPathResource;
 import org.springframework.core.io.Resource;
 import org.springframework.util.StringUtils;
+import org.springframework.web.servlet.config.annotation.CorsRegistry;
 import org.springframework.web.servlet.config.annotation.ResourceHandlerRegistry;
 import org.springframework.web.servlet.config.annotation.WebMvcConfigurer;
 import org.springframework.web.servlet.resource.ResourceResolver;
@@ -32,12 +33,10 @@ public class SinglePageAppConfig implements WebMvcConfigurer {
                 .addResolver(new PushStateResourceResolver());
     }
 
+    //TODO set CORS header so frontend can load: cdn.jsdelivr.net?
     private static class PushStateResourceResolver implements ResourceResolver {
         private Resource index = new ClassPathResource("/static/index.html");
         private List<String> handledExtensions = Arrays.asList("html", "js", "json", "csv", "css", "png", "svg", "eot", "ttf", "woff", "appcache", "jpg", "jpeg", "gif", "ico");
-        /*
-            http://localhost:8080/swagger-ui/index.html?configUrl=/v3/api-docs/swagger-config
-         */
         private List<String> ignoredPaths = Arrays.asList("api");
 
         @Override
