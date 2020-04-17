@@ -19,6 +19,7 @@ import static org.apache.commons.lang3.StringUtils.isBlank;
 
 @RestController
 @RequestMapping("/api/mturk/")
+@CrossOrigin(origins = "http://localhost:8181")
 public class MturkClientRestController {
     private final IdeaPairBatchDistributorService distributorService;
     private final ChallengeRepository challengeRepository;

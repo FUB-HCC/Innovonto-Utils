@@ -8,6 +8,7 @@ import de.fuberlin.innovonto.utils.ideasimilarityappbackend.model.IdeaPair;
 import java.util.List;
 
 @JsonIgnoreProperties(ignoreUnknown = true)
+//TODO rename to RatingProjectRequirements
 public class Requirements {
     private String id;
     private List<Idea> ideas;
