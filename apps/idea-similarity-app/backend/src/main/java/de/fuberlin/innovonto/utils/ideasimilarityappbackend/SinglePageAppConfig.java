@@ -49,7 +49,7 @@ public class SinglePageAppConfig implements WebMvcConfigurer {
         public String resolveUrlPath(String resourcePath, List<? extends Resource> locations, ResourceResolverChain chain) {
             Resource resolvedResource = resolve(resourcePath, locations);
             if (resolvedResource == null) {
-                throw new ResourceNotFoundException();
+                throw new ResourceNotFoundException(resourcePath);
             }
             try {
                 return resolvedResource.getURL().toString();
@@ -67,7 +67,7 @@ public class SinglePageAppConfig implements WebMvcConfigurer {
                         .map(loc -> createRelative(loc, requestPath))
                         .filter(resource -> resource != null && resource.exists())
                         .findFirst()
-                        .orElseThrow(ResourceNotFoundException::new);
+                        .orElseThrow(() -> new ResourceNotFoundException(requestPath));
             }
             return index;
         }

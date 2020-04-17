@@ -1,10 +1,12 @@
 package de.fuberlin.innovonto.utils.ideasimilarityappbackend.api.client;
 
-import de.fuberlin.innovonto.utils.ideasimilarityappbackend.api.MturkSesssionInformationMissingException;
 import de.fuberlin.innovonto.utils.ideasimilarityappbackend.IdeaPairBatchDistributorService;
+import de.fuberlin.innovonto.utils.ideasimilarityappbackend.api.MturkSesssionInformationMissingException;
 import de.fuberlin.innovonto.utils.ideasimilarityappbackend.management.BatchState;
 import de.fuberlin.innovonto.utils.ideasimilarityappbackend.model.*;
 import org.json.JSONObject;
+import org.slf4j.Logger;
+import org.slf4j.LoggerFactory;
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.http.MediaType;
 import org.springframework.web.bind.annotation.*;
@@ -21,6 +23,8 @@ import static org.apache.commons.lang3.StringUtils.isBlank;
 @RequestMapping("/api/mturk/")
 @CrossOrigin(origins = "http://localhost:8181")
 public class MturkClientRestController {
+    private static final Logger log = LoggerFactory.getLogger(MturkClientRestController.class);
+
     private final IdeaPairBatchDistributorService distributorService;
     private final ChallengeRepository challengeRepository;
     private final IdeaRepository ideaRepository;
@@ -72,6 +76,7 @@ public class MturkClientRestController {
         List<IdeaPair> pairs = batchForCurrentAssignment.getPairs();
         Collections.shuffle(pairs);
         //Step 5: Put everything into one object
+        log.info(ratingProjectId + ": Returning batch for " + batchForCurrentAssignment.getHWA() + ", consisting of " + pairs.size() + " pairs.");
         return new IdeaPairBatchDTO(challenges, ideas, pairs);
     }
 
@@ -119,11 +124,12 @@ public class MturkClientRestController {
                 batchRepository.save(sourceBatch);
 
                 List<MturkRatingSession> sessions = currentProject.getSessions();
-                if(sessions == null) {
+                if (sessions == null) {
                     sessions = new ArrayList<>();
                 }
                 sessions.add(savedSession);
                 ratingProjectRepository.save(currentProject);
+                log.info("Successfully saved results for:" + currentProject.getId() + ": HWA: " + sourceBatch.getHWA() + ", consisting of " + sourceBatch.getPairs().size() + " pairs.");
                 return savedSession;
             }
         }
