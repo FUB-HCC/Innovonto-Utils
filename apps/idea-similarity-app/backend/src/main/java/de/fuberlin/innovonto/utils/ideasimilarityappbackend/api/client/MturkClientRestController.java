@@ -102,7 +102,7 @@ public class MturkClientRestController {
                 //TODO compare HWA?
                 final List<RatedIdeaPairDTO> submissionDataRatings = submissionData.getRatings();
                 if (submissionDataRatings.size() != sourceBatch.getPairs().size()) {
-                    throw new IllegalStateException("Submission Data Ratings had size:" + submissionDataRatings.size() + " while source Batch pairs had size:" + sourceBatch.getPairs().size() + " aborting.");
+                    log.warn("Submission Data Ratings had size:" + submissionDataRatings.size() + " while source Batch pairs had size:" + sourceBatch.getPairs().size() + " continuing.");
                 }
                 final MturkRatingSession resultSession = new MturkRatingSession(submissionData);
                 final List<RatedIdeaPair> ratedIdeaPairs = new ArrayList<>(submissionDataRatings.size());
