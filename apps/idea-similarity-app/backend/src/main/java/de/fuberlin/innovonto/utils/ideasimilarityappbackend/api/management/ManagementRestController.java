@@ -14,6 +14,7 @@ import java.util.UUID;
 
 @RestController
 @RequestMapping("/api/management/")
+@CrossOrigin(origins = {"http://localhost:8080", "http://localhost:8181", "https://i2m-research.imp.fu-berlin.de"})
 public class ManagementRestController {
     private final RatingProjectRepository ratingProjectRepository;
     private final MturkRatingSessionRepository ratingSessionRepository;
@@ -30,6 +31,10 @@ public class ManagementRestController {
 
     //Upload Requirements
     @PostMapping("/requirements/")
+    @CrossOrigin(
+            origins = "*",
+            allowedHeaders = "*",
+            methods = {RequestMethod.GET, RequestMethod.POST})
     public RatingProject uploadRequirements(@RequestBody Requirements requirements) {
         requirementsImporter.validateRequirements(requirements);
         return requirementsImporter.saveRequirementsAsProject(requirements);
@@ -55,14 +60,14 @@ public class ManagementRestController {
 
     @GetMapping("/mturkRatingSessions/{mturkSessionId}/set-usable")
     public MturkRatingSession setUsable(@PathVariable UUID mturkSessionId) throws NotFoundException {
-        Optional<MturkRatingSession> byId =  ratingSessionRepository.findById(mturkSessionId);
-        if(byId.isEmpty()) {
+        Optional<MturkRatingSession> byId = ratingSessionRepository.findById(mturkSessionId);
+        if (byId.isEmpty()) {
             throw new NotFoundException("Could not find session with id: " + mturkSessionId);
         } else {
             final MturkRatingSession session = byId.get();
             session.setReviewStatus(ReviewStatus.USABLE);
             session.setReviewed(LocalDateTime.now());
-            for(RatedIdeaPair rating : session.getRatings()) {
+            for (RatedIdeaPair rating : session.getRatings()) {
                 rating.setReviewStatus(ReviewStatus.USABLE);
             }
             return ratingSessionRepository.save(session);
@@ -71,18 +76,18 @@ public class ManagementRestController {
 
     @GetMapping("/mturkRatingSessions/{mturkSessionId}/set-unusable")
     public MturkRatingSession setUnusable(@PathVariable String mturkSessionId) throws NotFoundException {
-        Optional<MturkRatingSession> byId =  ratingSessionRepository.findById(UUID.fromString(mturkSessionId));
-        if(byId.isEmpty()) {
+        Optional<MturkRatingSession> byId = ratingSessionRepository.findById(UUID.fromString(mturkSessionId));
+        if (byId.isEmpty()) {
             throw new NotFoundException("Could not find session with id: " + mturkSessionId);
         } else {
             final MturkRatingSession session = byId.get();
             Optional<Batch> byResultId = batchRepository.findByResultsRatingSessionId(session.getId());
-            if(byResultId.isEmpty()) {
+            if (byResultId.isEmpty()) {
                 throw new NotFoundException("Could not find source batch for session with id: " + mturkSessionId);
             } else {
                 session.setReviewStatus(ReviewStatus.UNUSABLE);
                 session.setReviewed(LocalDateTime.now());
-                for(RatedIdeaPair rating : session.getRatings()) {
+                for (RatedIdeaPair rating : session.getRatings()) {
                     rating.setReviewStatus(ReviewStatus.UNUSABLE);
                 }
 

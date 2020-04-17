@@ -1,6 +1,7 @@
 package de.fuberlin.innovonto.utils.ideasimilarityappbackend.api.client;
 
 import de.fuberlin.innovonto.utils.ideasimilarityappbackend.IdeaPairBatchDistributorService;
+import de.fuberlin.innovonto.utils.ideasimilarityappbackend.ResourceNotFoundException;
 import de.fuberlin.innovonto.utils.ideasimilarityappbackend.api.MturkSesssionInformationMissingException;
 import de.fuberlin.innovonto.utils.ideasimilarityappbackend.management.BatchState;
 import de.fuberlin.innovonto.utils.ideasimilarityappbackend.model.*;
@@ -21,7 +22,7 @@ import static org.apache.commons.lang3.StringUtils.isBlank;
 
 @RestController
 @RequestMapping("/api/mturk/")
-@CrossOrigin(origins = "http://localhost:8181")
+@CrossOrigin(origins = {"http://localhost:8080", "http://localhost:8181", "https://i2m-research.imp.fu-berlin.de"})
 public class MturkClientRestController {
     private static final Logger log = LoggerFactory.getLogger(MturkClientRestController.class);
 
@@ -40,6 +41,17 @@ public class MturkClientRestController {
         this.mturkRatingSessionRepository = mturkRatingSessionRepository;
         this.batchRepository = batchRepository;
         this.ratingProjectRepository = ratingProjectRepository;
+    }
+
+    @ResponseBody
+    @GetMapping(value = "/rating/projectMetadata")
+    public RatingProject getProjectMetadata(@RequestParam String ratingProjectId) {
+        Optional<RatingProject> byId = ratingProjectRepository.findById(ratingProjectId);
+        if (byId.isEmpty()) {
+            throw new ResourceNotFoundException("No project for id: " + ratingProjectId);
+        } else {
+            return byId.get();
+        }
     }
 
     @ResponseBody

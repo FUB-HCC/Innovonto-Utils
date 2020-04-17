@@ -17,6 +17,8 @@ public class RatingProject {
 
     private LocalDateTime created;
 
+    //TODO include metadata.
+
     @OneToMany(cascade = CascadeType.ALL)
     private List<Batch> batches;
 
