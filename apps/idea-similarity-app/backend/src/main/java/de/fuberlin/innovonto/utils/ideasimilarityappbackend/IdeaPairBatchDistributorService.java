@@ -1,6 +1,6 @@
 package de.fuberlin.innovonto.utils.ideasimilarityappbackend;
 
-import de.fuberlin.innovonto.utils.ideasimilarityappbackend.management.BatchState;
+import de.fuberlin.innovonto.utils.ideasimilarityappbackend.model.BatchState;
 import de.fuberlin.innovonto.utils.ideasimilarityappbackend.model.Batch;
 import de.fuberlin.innovonto.utils.ideasimilarityappbackend.model.BatchRepository;
 import de.fuberlin.innovonto.utils.ideasimilarityappbackend.model.RatingProject;

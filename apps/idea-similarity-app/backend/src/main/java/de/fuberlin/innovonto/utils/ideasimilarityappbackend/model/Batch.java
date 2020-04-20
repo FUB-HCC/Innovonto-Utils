@@ -1,7 +1,5 @@
 package de.fuberlin.innovonto.utils.ideasimilarityappbackend.model;
 
-import de.fuberlin.innovonto.utils.ideasimilarityappbackend.management.BatchState;
-import de.fuberlin.innovonto.utils.ideasimilarityappbackend.model.IdeaPair;
 import org.hibernate.annotations.GenericGenerator;
 
 import javax.persistence.*;

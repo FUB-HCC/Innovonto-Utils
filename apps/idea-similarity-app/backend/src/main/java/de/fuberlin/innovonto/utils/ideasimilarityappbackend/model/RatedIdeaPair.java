@@ -23,6 +23,7 @@ public class RatedIdeaPair {
 
     private int similarityRating;
 
+    //TODO save as string instead of magic number
     private ReviewStatus reviewStatus = ReviewStatus.UNREVIEWED;
 
     //Hibernate

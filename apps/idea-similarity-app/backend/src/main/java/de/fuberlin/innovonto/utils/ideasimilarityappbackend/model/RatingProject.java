@@ -1,7 +1,5 @@
 package de.fuberlin.innovonto.utils.ideasimilarityappbackend.model;
 
-import de.fuberlin.innovonto.utils.ideasimilarityappbackend.management.BatchState;
-
 import javax.persistence.CascadeType;
 import javax.persistence.Entity;
 import javax.persistence.Id;

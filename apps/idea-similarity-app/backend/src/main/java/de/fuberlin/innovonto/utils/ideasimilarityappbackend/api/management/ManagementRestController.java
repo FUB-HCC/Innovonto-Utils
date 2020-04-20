@@ -1,6 +1,6 @@
 package de.fuberlin.innovonto.utils.ideasimilarityappbackend.api.management;
 
-import de.fuberlin.innovonto.utils.ideasimilarityappbackend.management.BatchState;
+import de.fuberlin.innovonto.utils.ideasimilarityappbackend.model.BatchState;
 import de.fuberlin.innovonto.utils.ideasimilarityappbackend.management.Requirements;
 import de.fuberlin.innovonto.utils.ideasimilarityappbackend.management.RequirementsImporter;
 import de.fuberlin.innovonto.utils.ideasimilarityappbackend.model.*;
