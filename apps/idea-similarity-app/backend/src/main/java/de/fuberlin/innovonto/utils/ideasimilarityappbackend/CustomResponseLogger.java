@@ -7,8 +7,8 @@ import org.springframework.web.filter.AbstractRequestLoggingFilter;
 
 import javax.servlet.http.HttpServletRequest;
 
-import static de.fuberlin.innovonto.utils.common.logging.HttpRequestUtils.getIP;
-import static de.fuberlin.innovonto.utils.common.logging.HttpRequestUtils.getParameters;
+import static de.fuberlin.innovonto.utils.common.web.logging.HttpRequestUtils.getIP;
+import static de.fuberlin.innovonto.utils.common.web.logging.HttpRequestUtils.getParameters;
 
 @Component
 public class CustomResponseLogger extends AbstractRequestLoggingFilter {

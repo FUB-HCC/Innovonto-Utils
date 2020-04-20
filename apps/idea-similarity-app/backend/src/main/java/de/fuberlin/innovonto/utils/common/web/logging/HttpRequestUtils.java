@@ -1,4 +1,4 @@
-package de.fuberlin.innovonto.utils.common.logging;
+package de.fuberlin.innovonto.utils.common.web.logging;
 
 import javax.servlet.http.HttpServletRequest;
 import java.util.Enumeration;

@@ -1,4 +1,4 @@
-package de.fuberlin.innovonto.utils.ideasimilarityappbackend.api;
+package de.fuberlin.innovonto.utils.common.web;
 
 
 import org.springframework.http.HttpStatus;

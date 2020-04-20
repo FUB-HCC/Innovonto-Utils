@@ -2,7 +2,7 @@ package de.fuberlin.innovonto.utils.ideasimilarityappbackend.api.client;
 
 import de.fuberlin.innovonto.utils.ideasimilarityappbackend.IdeaPairBatchDistributorService;
 import de.fuberlin.innovonto.utils.ideasimilarityappbackend.ResourceNotFoundException;
-import de.fuberlin.innovonto.utils.ideasimilarityappbackend.api.MturkSesssionInformationMissingException;
+import de.fuberlin.innovonto.utils.common.web.MturkSesssionInformationMissingException;
 import de.fuberlin.innovonto.utils.ideasimilarityappbackend.model.BatchState;
 import de.fuberlin.innovonto.utils.ideasimilarityappbackend.model.*;
 import org.json.JSONObject;
