@@ -19,6 +19,18 @@ Building the standalone jar:
    
 Creates a boot jar in /build/libs/idea-similarity-app-backend-0.0.1-SNAPSHOT.jar
 
+### TODO for deployment: Integrate frontend
+deployment based on npm build	
+
+	jar {
+	  from('../frontend/dist') {
+		into 'static'
+	  }
+	}
+
+	jar.dependsOn(':frontend:assemble')
+
+
 ## Debugging
 ### Run local
 
