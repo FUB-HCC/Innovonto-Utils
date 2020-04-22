@@ -1,9 +1,6 @@
 package de.fuberlin.innovonto.utils.ideasimilarityappbackend.model;
 
-import javax.persistence.CascadeType;
-import javax.persistence.Entity;
-import javax.persistence.Id;
-import javax.persistence.OneToMany;
+import javax.persistence.*;
 import java.time.LocalDateTime;
 import java.util.List;
 
@@ -15,10 +12,9 @@ public class RatingProject {
 
     private LocalDateTime created;
 
-    //TODO default value for existing project?
-    private int estimatedTimeInMinutes;
-    private double compensation;
-    private int batchSize;
+    private int estimatedTimeInMinutes = 0;
+    private double compensation = 0;
+    private int batchSize = 0;
 
     @OneToMany(cascade = CascadeType.ALL)
     private List<Batch> batches;
