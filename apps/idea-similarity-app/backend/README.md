@@ -175,7 +175,9 @@ POST-BODY:
             ["207ed8be-e222-441c-bb86-3c75fc918208", "584397b2-a2de-46c6-b0c3-0a1d244ed6b4"]
         ],
         "goalRatingsPerPair": 2,
-        "batchSize": 2
+        "batchSize": 2,
+        "compensation":2.0,
+        "estimatedTimeInMinutes": 10
     }
     
 #### Working on a Project

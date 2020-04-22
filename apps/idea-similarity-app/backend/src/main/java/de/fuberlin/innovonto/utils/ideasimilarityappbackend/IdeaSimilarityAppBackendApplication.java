@@ -55,6 +55,9 @@ public class IdeaSimilarityAppBackendApplication {
                 Batch testBatch = new Batch(pairs);
 
                 RatingProject mockProject = new RatingProject("mockproject");
+                mockProject.setCompensation(2.0d);
+                mockProject.setEstimatedTimeInMinutes(10);
+                mockProject.setBatchSize(1);
                 List<Batch> batches = new ArrayList<>();
                 batches.add(testBatch);
                 mockProject.setBatches(batches);

@@ -79,6 +79,9 @@ public class RequirementsImporter {
     //TODO FIXME: this will fail on re-upload of a challenge.
     public RatingProject saveRequirementsAsProject(Requirements requirements) {
         final RatingProject result = new RatingProject(requirements.getId());
+        result.setBatchSize(requirements.getBatchSize());
+        result.setEstimatedTimeInMinutes(requirements.getEstimatedTimeInMinutes());
+        result.setCompensation(requirements.getCompensation());
         //save challenges
         for (Challenge challenge : requirements.getChallenges()) {
             challengeRepository.save(challenge);

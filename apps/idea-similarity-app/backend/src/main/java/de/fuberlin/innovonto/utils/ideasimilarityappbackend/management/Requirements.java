@@ -16,6 +16,8 @@ public class Requirements {
     private List<IdeaPair> pairs;
     private int goalRatingsPerPair;
     private int batchSize;
+    private int estimatedTimeInMinutes;
+    private double compensation;
 
     public String getId() {
         return id;
@@ -63,5 +65,21 @@ public class Requirements {
 
     public void setChallenges(List<Challenge> challenges) {
         this.challenges = challenges;
+    }
+
+    public int getEstimatedTimeInMinutes() {
+        return estimatedTimeInMinutes;
+    }
+
+    public void setEstimatedTimeInMinutes(int estimatedTimeInMinutes) {
+        this.estimatedTimeInMinutes = estimatedTimeInMinutes;
+    }
+
+    public double getCompensation() {
+        return compensation;
+    }
+
+    public void setCompensation(double compensation) {
+        this.compensation = compensation;
     }
 }

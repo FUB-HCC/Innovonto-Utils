@@ -15,7 +15,10 @@ public class RatingProject {
 
     private LocalDateTime created;
 
-    //TODO include metadata.
+    //TODO default value for existing project?
+    private int estimatedTimeInMinutes;
+    private double compensation;
+    private int batchSize;
 
     @OneToMany(cascade = CascadeType.ALL)
     private List<Batch> batches;
@@ -62,5 +65,29 @@ public class RatingProject {
 
     public void setSessions(List<MturkRatingSession> sessions) {
         this.sessions = sessions;
+    }
+
+    public int getEstimatedTimeInMinutes() {
+        return estimatedTimeInMinutes;
+    }
+
+    public void setEstimatedTimeInMinutes(int estimatedTimeInMinutes) {
+        this.estimatedTimeInMinutes = estimatedTimeInMinutes;
+    }
+
+    public double getCompensation() {
+        return compensation;
+    }
+
+    public void setCompensation(double compensation) {
+        this.compensation = compensation;
+    }
+
+    public int getBatchSize() {
+        return batchSize;
+    }
+
+    public void setBatchSize(int batchSize) {
+        this.batchSize = batchSize;
     }
 }
