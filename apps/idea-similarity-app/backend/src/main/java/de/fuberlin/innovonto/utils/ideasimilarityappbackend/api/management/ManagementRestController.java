@@ -86,6 +86,7 @@ public class ManagementRestController {
                 throw new NotFoundException("Could not find source batch for session with id: " + mturkSessionId);
             } else {
                 session.setReviewStatus(ReviewStatus.UNUSABLE);
+                session.setAssignmentId(session.getAssignmentId() + "-unusable-" + UUID.randomUUID());
                 session.setReviewed(LocalDateTime.now());
                 for (RatedIdeaPair rating : session.getRatings()) {
                     rating.setReviewStatus(ReviewStatus.UNUSABLE);
