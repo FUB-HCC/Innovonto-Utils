@@ -1,5 +1,7 @@
 package de.fuberlin.innovonto.utils.ideasimilarityappbackend.model;
 
+import org.hibernate.annotations.ColumnDefault;
+
 import javax.persistence.*;
 import java.time.LocalDateTime;
 import java.util.List;
@@ -12,8 +14,11 @@ public class RatingProject {
 
     private LocalDateTime created;
 
+    @ColumnDefault("0")
     private int estimatedTimeInMinutes = 0;
+    @ColumnDefault("0")
     private double compensation = 0;
+    @ColumnDefault("0")
     private int batchSize = 0;
 
     @OneToMany(cascade = CascadeType.ALL)
