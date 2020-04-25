@@ -102,11 +102,12 @@ public class MturkClientRestController {
         }
         Optional<RatingProject> byRatingProjectId = ratingProjectRepository.findById(submissionData.getRatingProjectId());
         if (byRatingProjectId.isEmpty()) {
-            throw new IllegalStateException("Tried to submit ratings without an allocated batch. AssignmentId is: " + submissionData.getAssignmentId());
+            throw new IllegalStateException("Tried to submit ratings for a project that is not in the database: " + submissionData.getRatingProjectId());
         } else {
-            final Optional<Batch> potentiallySubmittedBatch = batchRepository.findByHitIdAndWorkerIdAndAssignmentId(submissionData.getHitId(), submissionData.getWorkerId(), submissionData.getAssignmentId());
-            if (potentiallySubmittedBatch.isPresent() && potentiallySubmittedBatch.get().getBatchState().equals(BatchState.SUBMITTED)) {
-                return mturkRatingSessionRepository.findByAssignmentId(submissionData.getAssignmentId()).get();
+            final Optional<MturkRatingSession> alreadySubmittedSession = mturkRatingSessionRepository.findByHitIdAndWorkerIdAndAssignmentId(submissionData.getHitId(), submissionData.getWorkerId(), submissionData.getAssignmentId());
+            if (alreadySubmittedSession.isPresent()) {
+                log.info("Skipping duplicate submit of: " + alreadySubmittedSession.get());
+                return alreadySubmittedSession.get();
             }
             RatingProject currentProject = byRatingProjectId.get();
             Optional<Batch> byAssignmentId = batchRepository.findByAssignmentId(submissionData.getAssignmentId());

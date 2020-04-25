@@ -36,9 +36,16 @@ public class IdeaPairBatchDistributorService {
         Optional<RatingProject> byId = ratingProjectRepository.findById(ratingProjectId);
         if (byId.isPresent()) {
             //If there is submit-data for this Batch, return the same batch
-            Optional<Batch> alreadySubmittedBatch = batchRepository.findByHitIdAndWorkerIdAndAssignmentId(hitId,workerId,assignmentId);
-            if(alreadySubmittedBatch.isPresent()) {
-                return alreadySubmittedBatch.get();
+            Optional<Batch> alreadySubmittedBatch = batchRepository.findByHitIdAndWorkerIdAndAssignmentId(hitId, workerId, assignmentId);
+            if (alreadySubmittedBatch.isPresent()) {
+                final Batch batch = alreadySubmittedBatch.get();
+                log.info("Returning already submitted batch: " + batch);
+                batch.setLastPublished(LocalDateTime.now());
+                batch.setBatchState(BatchState.ALLOCATED);
+                batch.setHitId(hitId);
+                batch.setWorkerId(workerId);
+                batch.setAssignmentId(assignmentId);
+                return batch;
             }
             //if there is already a batch for the assignment id: return this one
             Optional<Batch> byAssignmentId = batchRepository.findByAssignmentId(assignmentId);
@@ -47,7 +54,7 @@ public class IdeaPairBatchDistributorService {
                 if (batch.getBatchState().equals(BatchState.SUBMITTED)) {
                     log.error("Tried to allocate a batch that is already submitted! Batch was:" + batch + " ,HWA is: (" + hitId + "|" + workerId + "|" + assignmentId + ")");
                     log.error("Try to find another batch that we could give to this assignment.");
-                    batch = findABatchForAProject(hitId,workerId,assignmentId,byId.get());
+                    batch = findABatchForAProject(hitId, workerId, assignmentId, byId.get());
                 }
                 if (!hitId.equals(batch.getHitId()) || !(workerId.equals(batch.getWorkerId())) || assignmentId.equals(batch.getAssignmentId())) {
                     log.info("HWA Missmatch between batch: (" + batch.getHWA() + ") and allocation request (" + hitId + "|" + workerId + "|" + assignmentId + "). Continuing.");

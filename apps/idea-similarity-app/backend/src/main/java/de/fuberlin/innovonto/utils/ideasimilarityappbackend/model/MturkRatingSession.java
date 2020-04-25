@@ -150,4 +150,21 @@ public class MturkRatingSession {
     public void setRatingProjectId(String ratingProjectId) {
         this.ratingProjectId = ratingProjectId;
     }
+
+    @Override
+    public String toString() {
+        return "MturkRatingSession{" +
+                "id=" + id +
+                ", submitted=" + submitted +
+                ", reviewed=" + reviewed +
+                ", hitId='" + hitId + '\'' +
+                ", workerId='" + workerId + '\'' +
+                ", assignmentId='" + assignmentId + '\'' +
+                ", ratingProjectId='" + ratingProjectId + '\'' +
+                ", fulltextFeedback='" + fulltextFeedback + '\'' +
+                ", clarityRating=" + clarityRating +
+                ", passedAttentionCheck=" + passedAttentionCheck +
+                ", reviewStatus=" + reviewStatus +
+                '}';
+    }
 }
