@@ -104,6 +104,10 @@ public class MturkClientRestController {
         if (byRatingProjectId.isEmpty()) {
             throw new IllegalStateException("Tried to submit ratings without an allocated batch. AssignmentId is: " + submissionData.getAssignmentId());
         } else {
+            final Optional<Batch> potentiallySubmittedBatch = batchRepository.findByHitIdAndWorkerIdAndAssignmentId(submissionData.getHitId(), submissionData.getWorkerId(), submissionData.getAssignmentId());
+            if (potentiallySubmittedBatch.isPresent() && potentiallySubmittedBatch.get().getBatchState().equals(BatchState.SUBMITTED)) {
+                return mturkRatingSessionRepository.findByAssignmentId(submissionData.getAssignmentId()).get();
+            }
             RatingProject currentProject = byRatingProjectId.get();
             Optional<Batch> byAssignmentId = batchRepository.findByAssignmentId(submissionData.getAssignmentId());
             if (byAssignmentId.isEmpty()) {

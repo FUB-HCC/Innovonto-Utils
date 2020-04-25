@@ -35,12 +35,19 @@ public class IdeaPairBatchDistributorService {
     public Batch allocateBatchFor(String ratingProjectId, String hitId, String workerId, String assignmentId) {
         Optional<RatingProject> byId = ratingProjectRepository.findById(ratingProjectId);
         if (byId.isPresent()) {
+            //If there is submit-data for this Batch, return the same batch
+            Optional<Batch> alreadySubmittedBatch = batchRepository.findByHitIdAndWorkerIdAndAssignmentId(hitId,workerId,assignmentId);
+            if(alreadySubmittedBatch.isPresent()) {
+                return alreadySubmittedBatch.get();
+            }
             //if there is already a batch for the assignment id: return this one
             Optional<Batch> byAssignmentId = batchRepository.findByAssignmentId(assignmentId);
             if (byAssignmentId.isPresent()) {
-                final Batch batch = byAssignmentId.get();
+                Batch batch = byAssignmentId.get();
                 if (batch.getBatchState().equals(BatchState.SUBMITTED)) {
-                    throw new RuntimeException("Tried to allocate a batch that is already submitted! Batch was:" + batch + " ,HWA is: (" + hitId + "|" + workerId + "|" + assignmentId + ")");
+                    log.error("Tried to allocate a batch that is already submitted! Batch was:" + batch + " ,HWA is: (" + hitId + "|" + workerId + "|" + assignmentId + ")");
+                    log.error("Try to find another batch that we could give to this assignment.");
+                    batch = findABatchForAProject(hitId,workerId,assignmentId,byId.get());
                 }
                 if (!hitId.equals(batch.getHitId()) || !(workerId.equals(batch.getWorkerId())) || assignmentId.equals(batch.getAssignmentId())) {
                     log.info("HWA Missmatch between batch: (" + batch.getHWA() + ") and allocation request (" + hitId + "|" + workerId + "|" + assignmentId + "). Continuing.");
@@ -53,22 +60,7 @@ public class IdeaPairBatchDistributorService {
                 return batch;
             } else {
                 final RatingProject ratingProject = byId.get();
-                final List<Batch> batches = ratingProject.getBatches();
-                final List<Batch> unallocatedBatches = batches.stream().filter((b) -> b.getBatchState().equals(BatchState.UNALLOCATED)).sorted(Comparator.comparing(Batch::getLastPublished)).collect(Collectors.toList());
-                final Batch result;
-                if (isNotEmpty(unallocatedBatches)) {
-                    result = unallocatedBatches.get(0);
-                } else {
-                    final List<Batch> unsubmittedBatches = batches.stream()
-                            .filter((b) -> !b.getBatchState().equals(BatchState.SUBMITTED)).sorted(Comparator.comparing(Batch::getLastPublished)).collect(Collectors.toList());
-                    if (isNotEmpty(unsubmittedBatches)) {
-                        result = unsubmittedBatches.get(0);
-                        log.warn("RE-ALLOCATING UNSUBMITTED BATCH: " + result);
-                        log.warn("Old Allocation was: (" + result.getHWA() + "), new allocation will be: (" + hitId + "|" + workerId + "|" + assignmentId + "). Continuing.");
-                    } else {
-                        throw new IllegalStateException("Tried to allocate a batch for a project where all batches are already submitted.");
-                    }
-                }
+                final Batch result = findABatchForAProject(hitId, workerId, assignmentId, ratingProject);
                 result.setLastPublished(LocalDateTime.now());
                 result.setBatchState(BatchState.ALLOCATED);
                 result.setHitId(hitId);
@@ -81,5 +73,25 @@ public class IdeaPairBatchDistributorService {
         } else {
             throw new RuntimeException("Couldn't find rating project for id: " + ratingProjectId);
         }
+    }
+
+    private Batch findABatchForAProject(String hitId, String workerId, String assignmentId, RatingProject ratingProject) {
+        final List<Batch> batches = ratingProject.getBatches();
+        final List<Batch> unallocatedBatches = batches.stream().filter((b) -> b.getBatchState().equals(BatchState.UNALLOCATED)).sorted(Comparator.comparing(Batch::getLastPublished)).collect(Collectors.toList());
+        final Batch result;
+        if (isNotEmpty(unallocatedBatches)) {
+            result = unallocatedBatches.get(0);
+        } else {
+            final List<Batch> unsubmittedBatches = batches.stream()
+                    .filter((b) -> !b.getBatchState().equals(BatchState.SUBMITTED)).sorted(Comparator.comparing(Batch::getLastPublished)).collect(Collectors.toList());
+            if (isNotEmpty(unsubmittedBatches)) {
+                result = unsubmittedBatches.get(0);
+                log.warn("RE-ALLOCATING UNSUBMITTED BATCH: " + result);
+                log.warn("Old Allocation was: (" + result.getHWA() + "), new allocation will be: (" + hitId + "|" + workerId + "|" + assignmentId + "). Continuing.");
+            } else {
+                throw new IllegalStateException("Tried to allocate a batch for a project where all batches are already submitted.");
+            }
+        }
+        return result;
     }
 }
