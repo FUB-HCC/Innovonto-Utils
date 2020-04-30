@@ -6,6 +6,7 @@ import javax.persistence.Id;
 import javax.persistence.OneToMany;
 import javax.validation.constraints.NotBlank;
 import java.time.LocalDateTime;
+import java.util.ArrayList;
 import java.util.List;
 
 @Entity
@@ -27,7 +28,7 @@ public class Project<BE, BRE, S> {
     private List<Batch<BE>> batches;
 
     @OneToMany(cascade = CascadeType.ALL)
-    private List<Submission<BRE, S>> sessions;
+    private List<Submission<BRE, S>> submissions;
 
     public String getId() {
         return id;
@@ -77,12 +78,12 @@ public class Project<BE, BRE, S> {
         this.batches = batches;
     }
 
-    public List<Submission<BRE, S>> getSessions() {
-        return sessions;
+    public List<Submission<BRE, S>> getSubmissions() {
+        return submissions;
     }
 
-    public void setSessions(List<Submission<BRE, S>> sessions) {
-        this.sessions = sessions;
+    public void setSubmissions(List<Submission<BRE, S>> submissions) {
+        this.submissions = submissions;
     }
 
     public long getNumberOfBatchesInProgress() {
@@ -95,5 +96,12 @@ public class Project<BE, BRE, S> {
 
     public String getProgressState() {
         return getNumberOfBatchesSubmitted() + "/" + batches.size() + " Submitted, " + getNumberOfBatchesInProgress() + " in progress.";
+    }
+
+    public void addSubmission(Submission<BRE, S> submission) {
+        if (submissions == null) {
+            submissions = new ArrayList<>();
+        }
+        submissions.add(submission);
     }
 }

@@ -5,6 +5,7 @@ import org.hibernate.annotations.GenericGenerator;
 import javax.persistence.*;
 import javax.validation.constraints.NotBlank;
 import java.time.LocalDateTime;
+import java.util.ArrayList;
 import java.util.List;
 import java.util.UUID;
 
@@ -36,12 +37,13 @@ public class Batch<BE> {
     //TODO assignmentId SHOULD be unique. what happens if its not?
     private String assignmentId;
 
-    @ElementCollection
-    private List<UUID> batchResultId;
-
     //TODO warum ist das many to many?
     @ManyToMany(cascade = CascadeType.ALL)
     private List<BE> batchElements;
+
+    //TODO set?
+    @ElementCollection
+    private List<UUID> submissionIds;
 
     //hibernate
     public Batch() {
@@ -113,12 +115,8 @@ public class Batch<BE> {
         this.assignmentId = assignmentId;
     }
 
-    public List<UUID> getBatchResultId() {
-        return batchResultId;
-    }
-
-    public void setBatchResultId(List<UUID> batchResultId) {
-        this.batchResultId = batchResultId;
+    public List<UUID> getSubmissionIds() {
+        return submissionIds;
     }
 
     public List<BE> getBatchElements() {
@@ -131,5 +129,12 @@ public class Batch<BE> {
 
     public String getHWA() {
         return hitId + "|" + workerId + "|" + assignmentId;
+    }
+
+    public void addSubmissionId(UUID submissionId) {
+        if(this.submissionIds == null) {
+            this.submissionIds = new ArrayList<>();
+        }
+        this.submissionIds.add(submissionId);
     }
 }

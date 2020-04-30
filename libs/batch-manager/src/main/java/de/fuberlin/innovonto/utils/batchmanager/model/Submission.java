@@ -30,9 +30,7 @@ public class Submission<BRE, S> {
     @NotBlank
     private String assignmentId;
     @NotBlank
-    private String ratingProjectId;
-
-    //TODO attention-checks?
+    private String projectId;
 
     private ReviewStatus reviewStatus = ReviewStatus.UNREVIEWED;
 
@@ -40,4 +38,97 @@ public class Submission<BRE, S> {
     private List<BRE> ratings;
 
     private S surveyResult;
+
+    //Hibernate
+    public Submission() {
+    }
+
+    //HWA,P,timestamps
+    public void setId(UUID id) {
+        this.id = id;
+    }
+
+    public UUID getId() {
+        return id;
+    }
+
+    public LocalDateTime getAccepted() {
+        return accepted;
+    }
+
+    public void setAccepted(LocalDateTime accepted) {
+        this.accepted = accepted;
+    }
+
+    public LocalDateTime getSubmitted() {
+        return submitted;
+    }
+
+    public void setSubmitted(LocalDateTime submitted) {
+        this.submitted = submitted;
+    }
+
+    public LocalDateTime getReviewed() {
+        return reviewed;
+    }
+
+    public void setReviewed(LocalDateTime reviewed) {
+        this.reviewed = reviewed;
+    }
+
+    public String getHitId() {
+        return hitId;
+    }
+
+    public void setHitId(String hitId) {
+        this.hitId = hitId;
+    }
+
+    public String getWorkerId() {
+        return workerId;
+    }
+
+    public void setWorkerId(String workerId) {
+        this.workerId = workerId;
+    }
+
+    public String getAssignmentId() {
+        return assignmentId;
+    }
+
+    public void setAssignmentId(String assignmentId) {
+        this.assignmentId = assignmentId;
+    }
+
+    public String getProjectId() {
+        return projectId;
+    }
+
+    public void setProjectId(String projectId) {
+        this.projectId = projectId;
+    }
+
+    public ReviewStatus getReviewStatus() {
+        return reviewStatus;
+    }
+
+    public void setReviewStatus(ReviewStatus reviewStatus) {
+        this.reviewStatus = reviewStatus;
+    }
+
+    public List<BRE> getRatings() {
+        return ratings;
+    }
+
+    public void setRatings(List<BRE> ratings) {
+        this.ratings = ratings;
+    }
+
+    public S getSurveyResult() {
+        return surveyResult;
+    }
+
+    public void setSurveyResult(S surveyResult) {
+        this.surveyResult = surveyResult;
+    }
 }

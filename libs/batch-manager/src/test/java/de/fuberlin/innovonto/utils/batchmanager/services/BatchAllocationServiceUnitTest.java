@@ -2,8 +2,10 @@ package de.fuberlin.innovonto.utils.batchmanager.services;
 
 
 import de.fuberlin.innovonto.utils.batchmanager.model.*;
+import de.fuberlin.innovonto.utils.batchmanager.services.testutils.MockBatchElement;
+import de.fuberlin.innovonto.utils.batchmanager.services.testutils.MockBatchResultElement;
+import de.fuberlin.innovonto.utils.batchmanager.services.testutils.MockSurvey;
 import org.junit.jupiter.api.Test;
-import org.mockito.Mock;
 
 import java.time.LocalDateTime;
 import java.util.ArrayList;
@@ -12,8 +14,8 @@ import java.util.List;
 import java.util.Optional;
 
 import static org.assertj.core.api.Assertions.assertThat;
-import static org.mockito.Mockito.mock;
-import static org.mockito.Mockito.when;
+import static org.assertj.core.api.Assertions.assertThatThrownBy;
+import static org.mockito.Mockito.*;
 
 class BatchAllocationServiceUnitTest {
 
@@ -23,7 +25,7 @@ class BatchAllocationServiceUnitTest {
      */
     @Test
     public void testSimpleAllocation() {
-        final Project<MockBatchElement, ?, ?> testProject = new Project<>();
+        final Project<MockBatchElement, MockBatchResultElement, MockSurvey> testProject = new Project<>();
         testProject.setId("testproject");
 
         final List<Batch<MockBatchElement>> sourceBatches = new ArrayList<>(2);
@@ -31,7 +33,7 @@ class BatchAllocationServiceUnitTest {
         sourceBatches.add(new Batch<>(Collections.singletonList(new MockBatchElement(2L))));
         testProject.setBatches(sourceBatches);
 
-        final ProjectRepository<MockBatchElement> mockProjectRepository = mock(ProjectRepository.class);
+        final ProjectRepository<MockBatchElement, MockBatchResultElement, MockSurvey> mockProjectRepository = mock(ProjectRepository.class);
         when(mockProjectRepository.findById("testproject")).thenReturn(Optional.of(testProject));
 
         final BatchRepository batchRepository = mock(BatchRepository.class);
@@ -39,6 +41,9 @@ class BatchAllocationServiceUnitTest {
         final BatchAllocationService<MockBatchElement> batchAllocationService = new BatchAllocationService<>(mockProjectRepository, batchRepository);
 
         final Batch<?> firstAllocation = batchAllocationService.allocateBatchFor("testproject", "test-hit", "test-worker", "test-assignment");
+
+        verify(batchRepository).findByHitIdAndWorkerIdAndAssignmentId("test-hit", "test-worker", "test-assignment");
+        verify(batchRepository).save(any(Batch.class));
 
         assertThat(firstAllocation).isNotNull();
         assertThat(firstAllocation.getBatchState()).isEqualTo(BatchState.ALLOCATED);
@@ -66,7 +71,6 @@ class BatchAllocationServiceUnitTest {
         assertThat(testProject.getBatches()).hasSize(2);
         assertThat(testProject.getNumberOfBatchesInProgress()).isEqualTo(2L);
         assertThat(testProject.getNumberOfBatchesSubmitted()).isEqualTo(0L);
-
     }
 
     /**
@@ -76,10 +80,94 @@ class BatchAllocationServiceUnitTest {
      */
     @Test
     public void testReAllocation() {
+        final Project<MockBatchElement, MockBatchResultElement, MockSurvey> testProject = new Project<>();
+        testProject.setId("testproject");
+
+        final List<Batch<MockBatchElement>> sourceBatches = new ArrayList<>(1);
+        sourceBatches.add(new Batch<>(Collections.singletonList(new MockBatchElement(1L))));
+        testProject.setBatches(sourceBatches);
+
+        final ProjectRepository<MockBatchElement, MockBatchResultElement, MockSurvey> mockProjectRepository = mock(ProjectRepository.class);
+        when(mockProjectRepository.findById("testproject")).thenReturn(Optional.of(testProject));
+
+        final BatchRepository batchRepository = mock(BatchRepository.class);
+
+        final BatchAllocationService<MockBatchElement> batchAllocationService = new BatchAllocationService<>(mockProjectRepository, batchRepository);
+
+        final Batch<?> firstAllocation = batchAllocationService.allocateBatchFor("testproject", "test-hit", "test-worker", "test-assignment");
+        assertThat(firstAllocation).isNotNull();
+        assertThat(firstAllocation.getHitId()).isEqualTo("test-hit");
+        assertThat(firstAllocation.getWorkerId()).isEqualTo("test-worker");
+        assertThat(firstAllocation.getAssignmentId()).isEqualTo("test-assignment");
+        assertThat(testProject.getNumberOfBatchesInProgress()).isEqualTo(1L);
+        final Batch<?> secondAllocation = batchAllocationService.allocateBatchFor("testproject", "test-hit", "test-worker-2", "test-assignment-2");
+        assertThat(secondAllocation).isNotNull();
+        assertThat(secondAllocation.getBatchState()).isEqualTo(BatchState.ALLOCATED);
+        assertThat(secondAllocation.getLastPublished()).isAfter(LocalDateTime.MIN);
+        assertThat(secondAllocation.getHitId()).isEqualTo("test-hit");
+        assertThat(secondAllocation.getWorkerId()).isEqualTo("test-worker-2");
+        assertThat(secondAllocation.getAssignmentId()).isEqualTo("test-assignment-2");
+        assertThat(secondAllocation.getBatchElements()).hasSize(1);
+        assertThat(testProject.getNumberOfBatchesInProgress()).isEqualTo(1L);
+    }
+
+    /**
+     * This is the case when we get a new allocation request for an already submitted batch.
+     * This is the case if the submit to the backend succeeded but the submit to amazon failed for some reason.
+     * This should return the already existing/submitted batch.
+     */
+    @Test
+    public void testReAllocationAfterSubmit() {
 
     }
 
-    //TODO gleiches assignment aber andere W/A? Oder ist das bei "reallocation" mit abgedeckt?
+    /**
+     * This is the case if we get a batch that is submitted with an assignment,
+     * but the workerId and hitId are different. I think i saw this once when letting
+     * the similarity batches. The result should be a new (unsubmitted or unallocated) batch for this assignment
+     */
+    @Test
+    public void testReAllocationForSubmittedAssignmentId() {
+        final Project<MockBatchElement, MockBatchResultElement, MockSurvey> testProject = new Project<>();
+        testProject.setId("testproject");
+
+        final List<Batch<MockBatchElement>> sourceBatches = new ArrayList<>(1);
+        final Batch<MockBatchElement> submittedBatch = createAlreadyAllocatedBatch();
+        submittedBatch.setBatchState(BatchState.SUBMITTED);
+        sourceBatches.add(submittedBatch);
+        sourceBatches.add(new Batch<>(Collections.singletonList(new MockBatchElement(2L))));
+        testProject.setBatches(sourceBatches);
+
+        final ProjectRepository<MockBatchElement, MockBatchResultElement, MockSurvey> mockProjectRepository = mock(ProjectRepository.class);
+        when(mockProjectRepository.findById("testproject")).thenReturn(Optional.of(testProject));
+
+        final BatchRepository batchRepository = mock(BatchRepository.class);
+        when(batchRepository.findByHitIdAndWorkerIdAndAssignmentId("test-hit", "test-worker", "test-assignment")).thenReturn(Optional.of(submittedBatch));
+        when(batchRepository.findByAssignmentId("test-assignment")).thenReturn(Optional.of(submittedBatch));
+
+        final BatchAllocationService<MockBatchElement> batchAllocationService = new BatchAllocationService<>(mockProjectRepository, batchRepository);
+
+        final Batch<?> firstAllocation = batchAllocationService.allocateBatchFor("testproject", "test-hit", "test-worker", "test-assignment");
+        assertThat(firstAllocation).isNotNull();
+        assertThat(firstAllocation.getHitId()).isEqualTo("test-hit");
+        assertThat(firstAllocation.getWorkerId()).isEqualTo("test-worker");
+        assertThat(firstAllocation.getAssignmentId()).isEqualTo("test-assignment");
+        assertThat(testProject.getBatches()).hasSize(2);
+        assertThat(testProject.getNumberOfBatchesSubmitted()).isEqualTo(1L);
+        assertThat(testProject.getNumberOfBatchesInProgress()).isEqualTo(0L);
+
+        final Batch<?> secondAllocation = batchAllocationService.allocateBatchFor("testproject", "test-hit", "test-worker-2", "test-assignment");
+        assertThat(secondAllocation).isNotNull();
+        assertThat(secondAllocation.getBatchState()).isEqualTo(BatchState.ALLOCATED);
+        assertThat(secondAllocation.getLastPublished()).isAfter(LocalDateTime.MIN);
+        assertThat(secondAllocation.getHitId()).isEqualTo("test-hit");
+        assertThat(secondAllocation.getWorkerId()).isEqualTo("test-worker-2");
+        assertThat(secondAllocation.getAssignmentId()).isEqualTo("test-assignment");
+        assertThat(secondAllocation.getBatchElements()).hasSize(1);
+        assertThat(testProject.getBatches()).hasSize(2);
+        assertThat(testProject.getNumberOfBatchesSubmitted()).isEqualTo(1L);
+        assertThat(testProject.getNumberOfBatchesInProgress()).isEqualTo(1L);
+    }
 
     /**
      * This is the case when we get a new allocation request, but there is already an allocation
@@ -87,7 +175,50 @@ class BatchAllocationServiceUnitTest {
      */
     @Test
     public void testReloading() {
+        //Setup
+        final Project<MockBatchElement, MockBatchResultElement, MockSurvey> testProject = new Project<>();
+        testProject.setId("testproject");
 
+        final List<Batch<MockBatchElement>> sourceBatches = new ArrayList<>(1);
+        sourceBatches.add(createAlreadyAllocatedBatch());
+        sourceBatches.add(new Batch<>(Collections.singletonList(new MockBatchElement(2L))));
+        testProject.setBatches(sourceBatches);
+
+        final ProjectRepository<MockBatchElement, MockBatchResultElement, MockSurvey> mockProjectRepository = mock(ProjectRepository.class);
+        when(mockProjectRepository.findById("testproject")).thenReturn(Optional.of(testProject));
+
+        final BatchRepository batchRepository = mock(BatchRepository.class);
+        when(batchRepository.findByHitIdAndWorkerIdAndAssignmentId("test-hit", "test-worker", "test-assignment")).thenReturn(Optional.of(sourceBatches.get(0)));
+
+        final BatchAllocationService<MockBatchElement> batchAllocationService = new BatchAllocationService<>(mockProjectRepository, batchRepository);
+
+        //Test
+        final Batch<?> firstAllocation = batchAllocationService.allocateBatchFor("testproject", "test-hit", "test-worker", "test-assignment");
+        assertThat(firstAllocation).isNotNull();
+        assertThat(firstAllocation.getHitId()).isEqualTo("test-hit");
+        assertThat(firstAllocation.getWorkerId()).isEqualTo("test-worker");
+        assertThat(firstAllocation.getAssignmentId()).isEqualTo("test-assignment");
+        assertThat(testProject.getNumberOfBatchesInProgress()).isEqualTo(1L);
+
+        final Batch<?> secondAllocation = batchAllocationService.allocateBatchFor("testproject", "test-hit", "test-worker", "test-assignment");
+        assertThat(secondAllocation).isNotNull();
+        assertThat(secondAllocation.getBatchState()).isEqualTo(BatchState.ALLOCATED);
+        assertThat(secondAllocation.getLastPublished()).isAfter(LocalDateTime.MIN);
+        assertThat(firstAllocation.getHitId()).isEqualTo("test-hit");
+        assertThat(firstAllocation.getWorkerId()).isEqualTo("test-worker");
+        assertThat(firstAllocation.getAssignmentId()).isEqualTo("test-assignment");
+        assertThat(secondAllocation.getBatchElements()).hasSize(1);
+        assertThat(testProject.getNumberOfBatchesInProgress()).isEqualTo(1L);
+    }
+
+    private Batch<MockBatchElement> createAlreadyAllocatedBatch() {
+        final Batch<MockBatchElement> reloadableBatch = new Batch<>(Collections.singletonList(new MockBatchElement(1L)));
+        reloadableBatch.setHitId("test-hit");
+        reloadableBatch.setWorkerId("test-worker");
+        reloadableBatch.setAssignmentId("test-assignment");
+        reloadableBatch.setBatchState(BatchState.ALLOCATED);
+        reloadableBatch.setLastPublished(LocalDateTime.now());
+        return reloadableBatch;
     }
 
     /**
@@ -97,7 +228,42 @@ class BatchAllocationServiceUnitTest {
      */
     @Test
     public void testOvercommitment() {
+        //Setup
+        final Project<MockBatchElement, MockBatchResultElement, MockSurvey> testProject = new Project<>();
+        testProject.setId("testproject");
 
+        final List<Batch<MockBatchElement>> sourceBatches = new ArrayList<>(1);
+        sourceBatches.add(new Batch<>(Collections.singletonList(new MockBatchElement(1L))));
+        testProject.setBatches(sourceBatches);
+
+        final ProjectRepository<MockBatchElement, MockBatchResultElement, MockSurvey> mockProjectRepository = mock(ProjectRepository.class);
+        when(mockProjectRepository.findById("testproject")).thenReturn(Optional.of(testProject));
+
+        final BatchRepository batchRepository = mock(BatchRepository.class);
+
+        final BatchAllocationService<MockBatchElement> batchAllocationService = new BatchAllocationService<>(mockProjectRepository, batchRepository);
+
+        //Test
+        final Batch<?> firstAllocation = batchAllocationService.allocateBatchFor("testproject", "test-hit", "test-worker", "test-assignment");
+        assertThat(firstAllocation).isNotNull();
+        assertThat(firstAllocation.getHitId()).isEqualTo("test-hit");
+        assertThat(firstAllocation.getWorkerId()).isEqualTo("test-worker");
+        assertThat(firstAllocation.getAssignmentId()).isEqualTo("test-assignment");
+        assertThat(testProject.getNumberOfBatchesInProgress()).isEqualTo(1L);
+
+        //TODO submit firstAllocation.
+
+
+        final Batch<?> secondAllocation = batchAllocationService.allocateBatchFor("testproject", "test-hit", "test-worker-2", "test-assignment-2");
+        assertThat(secondAllocation).isNotNull();
+        assertThat(secondAllocation.getBatchState()).isEqualTo(BatchState.ALLOCATED);
+        assertThat(secondAllocation.getLastPublished()).isAfter(LocalDateTime.MIN);
+        assertThat(secondAllocation.getHitId()).isEqualTo("test-hit");
+        assertThat(secondAllocation.getWorkerId()).isEqualTo("test-worker-2");
+        assertThat(secondAllocation.getAssignmentId()).isEqualTo("test-assignment-2");
+        assertThat(secondAllocation.getBatchElements()).hasSize(1);
+        //TODO what to do with the project here? this just shouldn't happen :/
+        assertThat(testProject.getNumberOfBatchesInProgress()).isEqualTo(1L);
     }
 
     /**
@@ -106,6 +272,22 @@ class BatchAllocationServiceUnitTest {
      */
     @Test
     public void testAllocationToNonexistentProject() {
+        final Project<MockBatchElement, MockBatchResultElement, MockSurvey> testProject = new Project<>();
+        testProject.setId("testproject");
 
+        final List<Batch<MockBatchElement>> sourceBatches = new ArrayList<>(1);
+        sourceBatches.add(new Batch<>(Collections.singletonList(new MockBatchElement(1L))));
+        testProject.setBatches(sourceBatches);
+
+        final ProjectRepository<MockBatchElement, MockBatchResultElement, MockSurvey> mockProjectRepository = mock(ProjectRepository.class);
+        when(mockProjectRepository.findById("testproject")).thenReturn(Optional.of(testProject));
+
+        final BatchRepository batchRepository = mock(BatchRepository.class);
+
+        final BatchAllocationService<MockBatchElement> batchAllocationService = new BatchAllocationService<>(mockProjectRepository, batchRepository);
+
+        assertThatThrownBy(() -> batchAllocationService.allocateBatchFor("NON-EXISTENT", "test-hit", "test-worker", "test-assignment"))
+                .isInstanceOf(RuntimeException.class)
+                .hasMessageContaining("Couldn't find project for id: NON-EXISTENT");
     }
 }

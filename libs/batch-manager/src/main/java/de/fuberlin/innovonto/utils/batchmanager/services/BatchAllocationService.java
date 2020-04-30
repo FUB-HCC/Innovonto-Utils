@@ -15,16 +15,16 @@ import static org.apache.commons.lang3.ObjectUtils.isNotEmpty;
 public class BatchAllocationService<BE> {
     private static final Logger log = LoggerFactory.getLogger(BatchAllocationService.class);
 
-    private final ProjectRepository<BE> projectRepository;
+    private final ProjectRepository<BE, ?, ?> projectRepository;
     private final BatchRepository batchRepository;
 
-    public BatchAllocationService(ProjectRepository<BE> projectRepository, BatchRepository batchRepository) {
+    public BatchAllocationService(ProjectRepository<BE, ?, ?> projectRepository, BatchRepository batchRepository) {
         this.projectRepository = projectRepository;
         this.batchRepository = batchRepository;
     }
 
-    private Batch<?> findABatchForAProject(String hitId, String workerId, String assignmentId, Project<BE, ?, ?> ratingProject) {
-        final List<Batch<BE>> batches = ratingProject.getBatches();
+    private Batch<?> findABatchForAProject(String hitId, String workerId, String assignmentId, Project<BE, ?, ?> project) {
+        final List<Batch<BE>> batches = project.getBatches();
         final List<Batch<?>> unallocatedBatches = batches.stream().filter((b) -> b.getBatchState().equals(BatchState.UNALLOCATED)).sorted(Comparator.comparing(Batch::getLastPublished)).collect(Collectors.toList());
         final Batch<?> result;
         if (isNotEmpty(unallocatedBatches)) {
@@ -44,20 +44,22 @@ public class BatchAllocationService<BE> {
         return result;
     }
 
-    public Batch<?> allocateBatchFor(String ratingProjectId, String hitId, String workerId, String assignmentId) {
-        Optional<Project<BE, ?, ?>> byId = projectRepository.findById(ratingProjectId);
+    public Batch<?> allocateBatchFor(String projectId, String hitId, String workerId, String assignmentId) {
+        Optional<? extends Project<BE, ?, ?>> byId = projectRepository.findById(projectId);
         if (byId.isPresent()) {
             //If there is submit-data for this Batch, return the same batch
             Optional<Batch<?>> alreadySubmittedBatch = batchRepository.findByHitIdAndWorkerIdAndAssignmentId(hitId, workerId, assignmentId);
             if (alreadySubmittedBatch.isPresent()) {
                 final Batch<?> batch = alreadySubmittedBatch.get();
-                log.info("Returning already submitted batch: " + batch);
-                batch.setLastPublished(LocalDateTime.now());
-                batch.setBatchState(BatchState.ALLOCATED);
-                batch.setHitId(hitId);
-                batch.setWorkerId(workerId);
-                batch.setAssignmentId(assignmentId);
-                return batch;
+                if (batch.getBatchState().equals(BatchState.SUBMITTED)) {
+                    log.info("Returning already submitted batch: " + batch);
+                    return batch;
+                } else {
+                    log.info("Got HWA batch that was not submitted yet, returning it");
+                    //TODO update something here?
+                    return batch;
+                }
+
             }
             //if there is already a batch for the assignment id: return this one
             Optional<Batch<?>> byAssignmentId = batchRepository.findByAssignmentId(assignmentId);
@@ -78,8 +80,8 @@ public class BatchAllocationService<BE> {
                 batch.setAssignmentId(assignmentId);
                 return batch;
             } else {
-                final Project<BE, ?, ?> ratingProject = byId.get();
-                final Batch<?> result = findABatchForAProject(hitId, workerId, assignmentId, ratingProject);
+                final Project<BE, ?, ?> project = byId.get();
+                final Batch<?> result = findABatchForAProject(hitId, workerId, assignmentId, project);
                 result.setLastPublished(LocalDateTime.now());
                 result.setBatchState(BatchState.ALLOCATED);
                 result.setHitId(hitId);
@@ -91,7 +93,7 @@ public class BatchAllocationService<BE> {
                 return result;
             }
         } else {
-            throw new RuntimeException("Couldn't find rating project for id: " + ratingProjectId);
+            throw new RuntimeException("Couldn't find project for id: " + projectId);
         }
     }
 

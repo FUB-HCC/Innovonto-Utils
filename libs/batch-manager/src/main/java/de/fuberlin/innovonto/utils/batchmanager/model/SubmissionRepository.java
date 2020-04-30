@@ -5,10 +5,10 @@ import org.springframework.data.repository.CrudRepository;
 import java.util.Optional;
 import java.util.UUID;
 
-public interface SubmissionRepository extends CrudRepository<Submission<?, ?>, UUID> {
-    Optional<Submission<?, ?>> findByAssignmentId(String assignmentId);
+public interface SubmissionRepository<BRE,S> extends CrudRepository<Submission<BRE, ?>, UUID> {
+    Optional<Submission<BRE, S>> findByAssignmentId(String assignmentId);
 
-    Optional<Submission<?, ?>> findByHitIdAndWorkerIdAndAssignmentId(String hitId, String workerId, String assignmentId);
+    Optional<Submission<BRE, S>> findByHitIdAndWorkerIdAndAssignmentId(String hitId, String workerId, String assignmentId);
 
-    Iterable<Submission<?, ?>> findAllByRatingProjectIdAndReviewStatus(String ratingProjectId, ReviewStatus reviewStatus);
+    Iterable<Submission<BRE, S>> findAllByProjectIdAndReviewStatus(String projectId, ReviewStatus reviewStatus);
 }
