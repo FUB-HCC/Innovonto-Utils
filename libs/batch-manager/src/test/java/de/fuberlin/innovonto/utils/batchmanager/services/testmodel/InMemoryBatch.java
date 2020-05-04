@@ -1,62 +1,42 @@
-package de.fuberlin.innovonto.utils.batchmanager.model;
+package de.fuberlin.innovonto.utils.batchmanager.services.testmodel;
 
-import org.hibernate.annotations.GenericGenerator;
+import de.fuberlin.innovonto.utils.batchmanager.api.Batch;
+import de.fuberlin.innovonto.utils.batchmanager.api.BatchState;
 
-import javax.persistence.*;
-import javax.validation.constraints.NotBlank;
 import java.time.LocalDateTime;
 import java.util.ArrayList;
 import java.util.List;
 import java.util.UUID;
 
-@Entity
-public class Batch<BE> {
+public class InMemoryBatch implements Batch {
 
-    @Id
-    @GeneratedValue(generator = "UUID")
-    @GenericGenerator(
-            name = "UUID",
-            strategy = "de.fuberlin.innovonto.utils.common.FallbackUUIDGenerator"
-    )
     private UUID id;
-    @NotBlank
+
     private LocalDateTime created;
     private LocalDateTime lastPublished;
     private LocalDateTime submitted;
 
-    @NotBlank
-    @Enumerated(EnumType.STRING)
     private BatchState batchState = BatchState.UNALLOCATED;
 
-    //TODO generify: This is mturk specific
-    @NotBlank
     private String hitId;
-    @NotBlank
     private String workerId;
-    @NotBlank
-    //TODO assignmentId SHOULD be unique. what happens if its not?
     private String assignmentId;
 
-    //TODO warum ist das many to many?
-    @ManyToMany(cascade = CascadeType.ALL)
-    private List<BE> batchElements;
-
-    //TODO set?
-    @ElementCollection
     private List<UUID> submissionIds;
+    private List<MockBatchElement> mockBatchElements;
 
-    //hibernate
-    public Batch() {
-    }
-
-    public Batch(List<BE> batchElements) {
-        this.batchElements = batchElements;
-        this.created = LocalDateTime.now();
+    public InMemoryBatch(List<MockBatchElement> mockBatchElements) {
+        this.mockBatchElements = mockBatchElements;
         this.lastPublished = LocalDateTime.MIN;
     }
 
+    @Override
     public UUID getId() {
         return id;
+    }
+
+    public void setId(UUID id) {
+        this.id = id;
     }
 
     public LocalDateTime getCreated() {
@@ -67,74 +47,84 @@ public class Batch<BE> {
         this.created = created;
     }
 
+    @Override
     public LocalDateTime getLastPublished() {
         return lastPublished;
     }
 
+    @Override
     public void setLastPublished(LocalDateTime lastPublished) {
         this.lastPublished = lastPublished;
     }
 
+    @Override
     public LocalDateTime getSubmitted() {
         return submitted;
     }
 
+    @Override
     public void setSubmitted(LocalDateTime submitted) {
         this.submitted = submitted;
     }
 
+    @Override
     public BatchState getBatchState() {
         return batchState;
     }
 
+    @Override
     public void setBatchState(BatchState batchState) {
         this.batchState = batchState;
     }
 
+    @Override
     public String getHitId() {
         return hitId;
     }
 
+    @Override
     public void setHitId(String hitId) {
         this.hitId = hitId;
     }
 
+    @Override
     public String getWorkerId() {
         return workerId;
     }
 
+    @Override
     public void setWorkerId(String workerId) {
         this.workerId = workerId;
     }
 
+    @Override
     public String getAssignmentId() {
         return assignmentId;
     }
 
+    @Override
     public void setAssignmentId(String assignmentId) {
         this.assignmentId = assignmentId;
-    }
-
-    public List<UUID> getSubmissionIds() {
-        return submissionIds;
-    }
-
-    public List<BE> getBatchElements() {
-        return batchElements;
-    }
-
-    public void setBatchElements(List<BE> batchElements) {
-        this.batchElements = batchElements;
     }
 
     public String getHWA() {
         return hitId + "|" + workerId + "|" + assignmentId;
     }
 
+    @Override
     public void addSubmissionId(UUID submissionId) {
-        if(this.submissionIds == null) {
+        if (this.submissionIds == null) {
             this.submissionIds = new ArrayList<>();
         }
         this.submissionIds.add(submissionId);
+    }
+
+    @Override
+    public List<UUID> getSubmissionIds() {
+        return submissionIds;
+    }
+
+    public List<MockBatchElement> getBatchElements() {
+        return this.mockBatchElements;
     }
 }

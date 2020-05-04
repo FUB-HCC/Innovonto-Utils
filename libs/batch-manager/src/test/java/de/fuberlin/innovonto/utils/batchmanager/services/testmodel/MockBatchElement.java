@@ -1,4 +1,4 @@
-package de.fuberlin.innovonto.utils.batchmanager.services.testutils;
+package de.fuberlin.innovonto.utils.batchmanager.services.testmodel;
 
 public class MockBatchElement {
     private final long id;

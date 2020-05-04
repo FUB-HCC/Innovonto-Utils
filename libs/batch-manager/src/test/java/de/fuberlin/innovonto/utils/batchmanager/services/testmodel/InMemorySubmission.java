@@ -1,55 +1,33 @@
-package de.fuberlin.innovonto.utils.batchmanager.model;
+package de.fuberlin.innovonto.utils.batchmanager.services.testmodel;
 
-import org.hibernate.annotations.GenericGenerator;
+import de.fuberlin.innovonto.utils.batchmanager.api.Submission;
+import de.fuberlin.innovonto.utils.batchmanager.api.SubmissionState;
 
-import javax.persistence.*;
-import javax.validation.constraints.NotBlank;
 import java.time.LocalDateTime;
-import java.util.List;
 import java.util.UUID;
 
-@Entity
-public class Submission<BRE, S> {
-    @Id
-    @GeneratedValue(generator = "UUID")
-    @GenericGenerator(
-            name = "UUID",
-            strategy = "de.fuberlin.innovonto.utils.common.FallbackUUIDGenerator"
-    )
+public class InMemorySubmission implements Submission {
     private UUID id;
     //Metadata
     private LocalDateTime accepted;
     private LocalDateTime submitted;
     private LocalDateTime reviewed;
 
-    //General:
-    @NotBlank
     private String hitId;
-    @NotBlank
     private String workerId;
-    @NotBlank
     private String assignmentId;
-    @NotBlank
+
     private String projectId;
 
-    private ReviewStatus reviewStatus = ReviewStatus.UNREVIEWED;
+    private SubmissionState submissionState = SubmissionState.UNREVIEWED;
 
-    @OneToMany(cascade = CascadeType.ALL)
-    private List<BRE> ratings;
-
-    private S surveyResult;
-
-    //Hibernate
-    public Submission() {
-    }
-
-    //HWA,P,timestamps
-    public void setId(UUID id) {
-        this.id = id;
-    }
-
+    @Override
     public UUID getId() {
         return id;
+    }
+
+    public void setId(UUID id) {
+        this.id = id;
     }
 
     public LocalDateTime getAccepted() {
@@ -76,30 +54,37 @@ public class Submission<BRE, S> {
         this.reviewed = reviewed;
     }
 
+    @Override
     public String getHitId() {
         return hitId;
     }
 
+    @Override
     public void setHitId(String hitId) {
         this.hitId = hitId;
     }
 
+    @Override
     public String getWorkerId() {
         return workerId;
     }
 
+    @Override
     public void setWorkerId(String workerId) {
         this.workerId = workerId;
     }
 
+    @Override
     public String getAssignmentId() {
         return assignmentId;
     }
 
+    @Override
     public void setAssignmentId(String assignmentId) {
         this.assignmentId = assignmentId;
     }
 
+    @Override
     public String getProjectId() {
         return projectId;
     }
@@ -108,27 +93,18 @@ public class Submission<BRE, S> {
         this.projectId = projectId;
     }
 
-    public ReviewStatus getReviewStatus() {
-        return reviewStatus;
+    @Override
+    public SubmissionState getSubmissionState() {
+        return submissionState;
     }
 
-    public void setReviewStatus(ReviewStatus reviewStatus) {
-        this.reviewStatus = reviewStatus;
+    public void setSubmissionState(SubmissionState submissionState) {
+        this.submissionState = submissionState;
     }
 
-    public List<BRE> getRatings() {
-        return ratings;
+    @Override
+    public String getHWA() {
+        return hitId + "|" + workerId + "|" + assignmentId;
     }
 
-    public void setRatings(List<BRE> ratings) {
-        this.ratings = ratings;
-    }
-
-    public S getSurveyResult() {
-        return surveyResult;
-    }
-
-    public void setSurveyResult(S surveyResult) {
-        this.surveyResult = surveyResult;
-    }
 }
