@@ -10,17 +10,5 @@ The projects were:
 This project needs the following functionality:
 
 * [] create a project
-* [] allocate a batch to a worker
-* [] receive submission results and update the project state accordingly
-
-Furthermore, I'm thinking about including the following functionality
-* management frontend
-* approve/reject logic?
-
-
-## Batch Allocation
-* simple allocation
-* re-allocation
-* reloading
-* overcommitment
-* ?
+* [X] allocate a batch to a worker
+* [X] receive submission results and update the project state accordingly
