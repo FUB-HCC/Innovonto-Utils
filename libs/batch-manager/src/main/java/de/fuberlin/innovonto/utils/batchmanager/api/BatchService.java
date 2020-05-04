@@ -2,10 +2,10 @@ package de.fuberlin.innovonto.utils.batchmanager.api;
 
 import java.util.Optional;
 
-public interface BatchService {
-    Optional<Batch> findByHitIdAndWorkerIdAndAssignmentId(String hitId, String workerId, String assignmentId);
+public interface BatchService<B extends Batch> {
+    Optional<B> findByHitIdAndWorkerIdAndAssignmentId(String hitId, String workerId, String assignmentId);
 
-    Optional<Batch> findByAssignmentId(String assignmentId);
+    Optional<B> findByAssignmentId(String assignmentId);
 
-    void save(Batch batch);
+    B save(B batch);
 }

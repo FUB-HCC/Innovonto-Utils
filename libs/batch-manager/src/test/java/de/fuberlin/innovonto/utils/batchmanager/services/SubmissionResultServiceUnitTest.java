@@ -31,13 +31,13 @@ class SubmissionResultServiceUnitTest {
         sourceBatches.add(mockBatch);
         testProject.setBatches(sourceBatches);
 
-        final ProjectService projectRepository = mock(ProjectService.class);
+        final ProjectService<InMemoryProject> projectRepository = mock(ProjectService.class);
         when(projectRepository.findById("testproject")).thenReturn(Optional.of(testProject));
 
-        final BatchService batchRepository = mock(BatchService.class);
+        final BatchService<InMemoryBatch> batchRepository = mock(BatchService.class);
         when(batchRepository.findByAssignmentId("test-assignment")).thenReturn(Optional.of(mockBatch));
 
-        final SubmissionService submissionRepository = createMockSubmissionRepository();
+        final SubmissionService<InMemorySubmission> submissionRepository = createMockSubmissionRepository();
 
         final SubmissionResultService submissionResultService = new SubmissionResultService(submissionRepository, projectRepository, batchRepository);
         final InMemorySubmission inputSubmission = new InMemorySubmission();
@@ -59,9 +59,9 @@ class SubmissionResultServiceUnitTest {
         //assertThat(testProject.getSubmissions().get(0).getId()).isEqualTo(submissionId);
     }
 
-    private SubmissionService createMockSubmissionRepository() {
-        final SubmissionService submissionRepository = mock(SubmissionService.class);
-        when(submissionRepository.save(any(Submission.class))).thenAnswer(
+    private SubmissionService<InMemorySubmission> createMockSubmissionRepository() {
+        final SubmissionService<InMemorySubmission> submissionRepository = mock(SubmissionService.class);
+        when(submissionRepository.save(any(InMemorySubmission.class))).thenAnswer(
                 (Answer<Submission>) invocation -> {
                     Object argument = invocation.getArgument(0);
                     if (argument instanceof InMemorySubmission) {

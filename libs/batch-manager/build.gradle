@@ -1,10 +1,11 @@
 plugins {
     id 'java'
     id 'maven-publish'
+    id 'signing'
 }
 
 group = 'de.fu-berlin.mi.hcc.innovonto.utils'
-version = '0.0.1'
+version = '0.0.1-SNAPSHOT'
 
 sourceCompatibility = '11'
 
@@ -30,11 +31,60 @@ dependencies {
 }
 
 publishing {
+    repositories {
+        maven {
+            name = 'OSSRH'
+            def releasesRepoUrl = "https://oss.sonatype.org/service/local/staging/deploy/maven2"
+            def snapshotsRepoUrl = "https://oss.sonatype.org/content/repositories/snapshots"
+            url = version.endsWith('SNAPSHOT') ? snapshotsRepoUrl : releasesRepoUrl
+            credentials {
+                username = ossrhUsername
+                password = ossrhPassword
+                //username = project.hasProperty('ossrhPassword') ? project.property('ossrhPassword') : ''
+                //username = project.hasProperty('osshrUsername') ? project.property('osshrUsername') : ''
+            }
+        }
+    }
     publications {
         mavenJava(MavenPublication) {
-
             from components.java
+            pom {
+                name = 'Innovonto Batch-Manager'
+                description = 'A java library to allocate batches to crowdsourcing workers'
+                url = 'https://github.com/FUB-HCC/Innovonto-Utils'
+                licenses {
+                    license {
+                        name = 'GNU AFFERO GENERAL PUBLIC LICENSE Version 3'
+                        url = 'https://www.gnu.org/licenses/agpl-3.0.en.html'
+                    }
+                }
+
+                developers {
+                    developer {
+                        id = 'mackeprm'
+                        name = 'Maximilian Mackeprang'
+                        email = 'maximilian.mackeprang@fu-berlin.de'
+                    }
+                }
+
+                scm {
+                    connection = 'git@github.com:FUB-HCC/Innovonto-Utils.git'
+                    developerConnection = 'git@github.com:FUB-HCC/Innovonto-Utils.git'
+                    url = 'https://github.com/FUB-HCC/Innovonto-Utils'
+                }
+
+            }
         }
+    }
+}
+
+signing {
+    sign publishing.publications.mavenJava
+}
+
+javadoc {
+    if (JavaVersion.current().isJava9Compatible()) {
+        options.addBooleanOption('html5', true)
     }
 }
 

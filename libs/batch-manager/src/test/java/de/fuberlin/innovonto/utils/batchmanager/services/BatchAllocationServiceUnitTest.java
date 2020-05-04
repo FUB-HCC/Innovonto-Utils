@@ -90,12 +90,12 @@ class BatchAllocationServiceUnitTest {
         sourceBatches.add(new InMemoryBatch(Collections.singletonList(new MockBatchElement(1L))));
         testProject.setBatches(sourceBatches);
 
-        final ProjectService mockProjectRepository = mock(ProjectService.class);
+        final ProjectService<InMemoryProject> mockProjectRepository = mock(ProjectService.class);
         when(mockProjectRepository.findById("testproject")).thenReturn(Optional.of(testProject));
 
-        final BatchService batchRepository = mock(BatchService.class);
+        final BatchService<InMemoryBatch> batchService = mock(BatchService.class);
 
-        final BatchAllocationService batchAllocationService = new BatchAllocationService(mockProjectRepository, batchRepository);
+        final BatchAllocationService batchAllocationService = new BatchAllocationService(mockProjectRepository, batchService);
 
         final Batch firstAllocation = batchAllocationService.allocateBatchFor("testproject", "test-hit", "test-worker", "test-assignment");
         assertThat(firstAllocation).isNotNull();
@@ -140,10 +140,10 @@ class BatchAllocationServiceUnitTest {
         sourceBatches.add(new InMemoryBatch(Collections.singletonList(new MockBatchElement(2L))));
         testProject.setBatches(sourceBatches);
 
-        final ProjectService mockProjectRepository = mock(ProjectService.class);
+        final ProjectService<InMemoryProject> mockProjectRepository = mock(ProjectService.class);
         when(mockProjectRepository.findById("testproject")).thenReturn(Optional.of(testProject));
 
-        final BatchService batchRepository = mock(BatchService.class);
+        final BatchService<InMemoryBatch> batchRepository = mock(BatchService.class);
         when(batchRepository.findByHitIdAndWorkerIdAndAssignmentId("test-hit", "test-worker", "test-assignment")).thenReturn(Optional.of(submittedBatch));
         when(batchRepository.findByAssignmentId("test-assignment")).thenReturn(Optional.of(submittedBatch));
 
@@ -185,10 +185,10 @@ class BatchAllocationServiceUnitTest {
         sourceBatches.add(new InMemoryBatch(Collections.singletonList(new MockBatchElement(2L))));
         testProject.setBatches(sourceBatches);
 
-        final ProjectService mockProjectRepository = mock(ProjectService.class);
+        final ProjectService<InMemoryProject> mockProjectRepository = mock(ProjectService.class);
         when(mockProjectRepository.findById("testproject")).thenReturn(Optional.of(testProject));
 
-        final BatchService batchRepository = mock(BatchService.class);
+        final BatchService<InMemoryBatch> batchRepository = mock(BatchService.class);
         when(batchRepository.findByHitIdAndWorkerIdAndAssignmentId("test-hit", "test-worker", "test-assignment")).thenReturn(Optional.of(sourceBatches.get(0)));
 
         final BatchAllocationService batchAllocationService = new BatchAllocationService(mockProjectRepository, batchRepository);
@@ -236,10 +236,10 @@ class BatchAllocationServiceUnitTest {
         sourceBatches.add(new InMemoryBatch(Collections.singletonList(new MockBatchElement(1L))));
         testProject.setBatches(sourceBatches);
 
-        final ProjectService mockProjectRepository = mock(ProjectService.class);
+        final ProjectService<InMemoryProject> mockProjectRepository = mock(ProjectService.class);
         when(mockProjectRepository.findById("testproject")).thenReturn(Optional.of(testProject));
 
-        final BatchService batchRepository = mock(BatchService.class);
+        final BatchService<InMemoryBatch> batchRepository = mock(BatchService.class);
 
         final BatchAllocationService batchAllocationService = new BatchAllocationService(mockProjectRepository, batchRepository);
 
@@ -278,10 +278,10 @@ class BatchAllocationServiceUnitTest {
         sourceBatches.add(new InMemoryBatch(Collections.singletonList(new MockBatchElement(1L))));
         testProject.setBatches(sourceBatches);
 
-        final ProjectService mockProjectRepository = mock(ProjectService.class);
+        final ProjectService<InMemoryProject> mockProjectRepository = mock(ProjectService.class);
         when(mockProjectRepository.findById("testproject")).thenReturn(Optional.of(testProject));
 
-        final BatchService batchRepository = mock(BatchService.class);
+        final BatchService<InMemoryBatch> batchRepository = mock(BatchService.class);
 
         final BatchAllocationService batchAllocationService = new BatchAllocationService(mockProjectRepository, batchRepository);
 
