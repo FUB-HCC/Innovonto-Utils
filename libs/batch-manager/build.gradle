@@ -1,9 +1,11 @@
 plugins {
     id 'java'
+    id 'maven-publish'
 }
 
-group = 'de.fuberlin.innovonto.utils'
-version = '0.0.1-SNAPSHOT'
+group = 'de.fu-berlin.mi.hcc.innovonto.utils'
+version = '0.0.1'
+
 sourceCompatibility = '11'
 
 configurations {
@@ -27,6 +29,20 @@ dependencies {
     testImplementation 'org.mockito:mockito-core:2.+'
 }
 
+publishing {
+    publications {
+        mavenJava(MavenPublication) {
+
+            from components.java
+        }
+    }
+}
+
 test {
     useJUnitPlatform()
+}
+
+java {
+    withJavadocJar()
+    withSourcesJar()
 }
