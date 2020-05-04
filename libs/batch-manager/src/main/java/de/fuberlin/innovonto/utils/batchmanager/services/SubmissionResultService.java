@@ -10,11 +10,11 @@ import java.util.Optional;
 public class SubmissionResultService {
     private static final Logger log = LoggerFactory.getLogger(SubmissionResultService.class);
 
-    private final SubmissionService submissionRepository;
-    private final ProjectService projectRepository;
-    private final BatchService batchRepository;
+    private final SubmissionService<Submission> submissionRepository;
+    private final ProjectService<Project> projectRepository;
+    private final BatchService<Batch> batchRepository;
 
-    public SubmissionResultService(SubmissionService submissionRepository, ProjectService projectRepository, BatchService batchRepository) {
+    public SubmissionResultService(SubmissionService<Submission> submissionRepository, ProjectService<Project> projectRepository, BatchService<Batch> batchRepository) {
         this.submissionRepository = submissionRepository;
         this.projectRepository = projectRepository;
         this.batchRepository = batchRepository;

@@ -16,10 +16,10 @@ import static org.apache.commons.lang3.ObjectUtils.isNotEmpty;
 public class BatchAllocationService {
     private static final Logger log = LoggerFactory.getLogger(BatchAllocationService.class);
 
-    private final ProjectService projectService;
-    private final BatchService batchService;
+    private final ProjectService<Project> projectService;
+    private final BatchService<Batch> batchService;
 
-    public BatchAllocationService(ProjectService projectService, BatchService batchService) {
+    public BatchAllocationService(ProjectService<Project> projectService, BatchService<Batch> batchService) {
         this.projectService = projectService;
         this.batchService = batchService;
     }
