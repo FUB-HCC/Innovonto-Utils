@@ -24,7 +24,7 @@ import java.util.UUID;
         servers = {
                 @Server(
                         description = "Development",
-                        url = "http://localhost:8181"
+                        url = "http://localhost:8080"
                 ),
                 @Server(
                         description = "Live",
@@ -41,9 +41,9 @@ public class IdeaSimilarityAppBackendApplication {
     @Autowired
     public CommandLineRunner createTestData(ChallengeRepository challengeRepository,
                                             IdeaRepository ideaRepository,
-                                            RatingProjectRepository ratingProjectRepository) {
+                                            RatingProjectRepository projectRepository) {
         return (args) -> {
-            if (ratingProjectRepository.findById("mockproject").isEmpty()) {
+            if (projectRepository.findById("mockproject").isEmpty()) {
                 challengeRepository.save(new Challenge("fabricDisplay", "Qui aliquip laborum aliqua adipisicing fugiat magna commodo non reprehenderit et tempor velit non. Esse excepteur esse enim amet dolor laborum dolor. Mollit irure anim pariatur eiusmod eu excepteur magna commodo consequat nostrud et et duis. Nisi aute cillum non culpa excepteur Lorem pariatur qui cupidatat duis. Dolore proident dolore nisi aliqua labore do esse ea.\n\nEst sunt Lorem non laborum tempor laboris Lorem aute id fugiat enim. Pariatur amet quis voluptate dolore. Veniam nostrud consectetur sint pariatur ad dolor. Magna do ad non deserunt adipisicing officia cillum culpa."));
                 challengeRepository.save(new Challenge("TCO", "Qui aliquip laborum aliqua adipisicing fugiat magna commodo non reprehenderit et tempor velit non. Esse excepteur esse enim amet dolor laborum dolor. Mollit irure anim pariatur eiusmod eu excepteur magna commodo consequat nostrud et et duis. Nisi aute cillum non culpa excepteur Lorem pariatur qui cupidatat duis. Dolore proident dolore nisi aliqua labore do esse ea.\n\nEst sunt Lorem non laborum tempor laboris Lorem aute id fugiat enim. Pariatur amet quis voluptate dolore. Veniam nostrud consectetur sint pariatur ad dolor. Magna do ad non deserunt adipisicing officia cillum culpa."));
                 challengeRepository.save(new Challenge("bionicRadar", "Qui aliquip laborum aliqua adipisicing fugiat magna commodo non reprehenderit et tempor velit non. Esse excepteur esse enim amet dolor laborum dolor. Mollit irure anim pariatur eiusmod eu excepteur magna commodo consequat nostrud et et duis. Nisi aute cillum non culpa excepteur Lorem pariatur qui cupidatat duis. Dolore proident dolore nisi aliqua labore do esse ea.\n\nEst sunt Lorem non laborum tempor laboris Lorem aute id fugiat enim. Pariatur amet quis voluptate dolore. Veniam nostrud consectetur sint pariatur ad dolor. Magna do ad non deserunt adipisicing officia cillum culpa."));
@@ -61,7 +61,7 @@ public class IdeaSimilarityAppBackendApplication {
                 List<Batch> batches = new ArrayList<>();
                 batches.add(testBatch);
                 mockProject.setBatches(batches);
-                ratingProjectRepository.save(mockProject);
+                projectRepository.save(mockProject);
             }
         };
     }

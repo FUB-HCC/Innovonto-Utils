@@ -39,7 +39,7 @@ class RequirementsImporterIntegrationTest {
 
 
         System.out.println("Running");
-        final String requirementsDocument = readFileToString("src/main/resources/static/data/requirements-test.json");
+        final String requirementsDocument = readFileToString("src/main/resources/test/requirements-test.json");
         //The mockdata defines 10 pairs, wants 2 ratings per pair and has a batch size of 2
         //This means we have 5 batches to rate the whole thing once, and this times 2
 
