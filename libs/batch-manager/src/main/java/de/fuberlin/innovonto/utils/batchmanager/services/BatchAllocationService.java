@@ -26,11 +26,13 @@ public class BatchAllocationService {
 
     private Batch findABatchForAProject(String hitId, String workerId, String assignmentId, Project project) {
         final List<Batch> batches = project.getBatches();
+        //TODO what do we do when batchState or lastPublished is NULL?
         final List<Batch> unallocatedBatches = batches.stream().filter((b) -> b.getBatchState().equals(BatchState.UNALLOCATED)).sorted(Comparator.comparing(Batch::getLastPublished)).collect(Collectors.toList());
         final Batch result;
         if (isNotEmpty(unallocatedBatches)) {
             result = unallocatedBatches.get(0);
         } else {
+            //TODO what do we do when batchState or lastPublished is NULL?
             final List<Batch> unsubmittedBatches = batches.stream()
                     .filter((b) -> !b.getBatchState().equals(BatchState.SUBMITTED)).sorted(Comparator.comparing(Batch::getLastPublished)).collect(Collectors.toList());
             if (isNotEmpty(unsubmittedBatches)) {
@@ -52,6 +54,7 @@ public class BatchAllocationService {
             Optional<Batch> alreadySubmittedBatch = batchService.findByHitIdAndWorkerIdAndAssignmentId(hitId, workerId, assignmentId);
             if (alreadySubmittedBatch.isPresent()) {
                 final Batch batch = alreadySubmittedBatch.get();
+                //TODO what do we do when batchState is NULL?
                 if (batch.getBatchState().equals(BatchState.SUBMITTED)) {
                     log.info("Returning already submitted batch: " + batch);
                     return batch;
@@ -65,6 +68,7 @@ public class BatchAllocationService {
             Optional<Batch> byAssignmentId = batchService.findByAssignmentId(assignmentId);
             if (byAssignmentId.isPresent()) {
                 Batch batch = byAssignmentId.get();
+                //TODO what do we do when batchState is NULL?
                 if (batch.getBatchState().equals(BatchState.SUBMITTED)) {
                     log.error("Tried to allocate a batch that is already submitted! Batch was:" + batch + " ,HWA is: (" + hitId + "|" + workerId + "|" + assignmentId + ")");
                     log.error("Try to find another batch that we could give to this assignment.");

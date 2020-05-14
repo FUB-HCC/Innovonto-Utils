@@ -9,6 +9,9 @@ The projects were:
 
 This project needs the following functionality:
 
-* [] create a project
+* [ ] create a project
+  * BatchSplitter?
+  * RequirementsImporter?
 * [X] allocate a batch to a worker
 * [X] receive submission results and update the project state accordingly
+* [ ] Mturk Metadata Interface?
