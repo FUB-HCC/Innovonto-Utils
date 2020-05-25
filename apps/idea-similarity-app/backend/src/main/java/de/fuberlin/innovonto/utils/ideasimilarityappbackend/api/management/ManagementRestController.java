@@ -14,7 +14,7 @@ import java.util.UUID;
 
 @RestController
 @RequestMapping("/api/management/")
-@CrossOrigin(origins = {"http://localhost:8080", "http://localhost:8181", "https://i2m-research.imp.fu-berlin.de"})
+@CrossOrigin(origins = {"http://localhost:9002", "http://localhost:9500", "https://i2m-research.imp.fu-berlin.de"})
 public class ManagementRestController {
     private final RatingProjectRepository ratingProjectRepository;
     private final MturkRatingSessionRepository ratingSessionRepository;
