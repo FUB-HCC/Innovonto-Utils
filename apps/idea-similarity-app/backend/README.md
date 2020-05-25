@@ -38,15 +38,15 @@ Running the standalone server created by the gradle bootJar task:
         
         java -jar idea-similarity-app-backend-0.0.1-SNAPSHOT.jar
         
-        curl "http://localhost:8080/api"        
+        curl "http://localhost:8002/api"        
 
 For debugging, there is a swagger ui running at:
 
-        http://localhost:8080/swagger-ui.html
+        http://localhost:8002/swagger-ui.html
         
 Furthermore, there is a h2 console running at:
 
-    http://localhost:8080/h2-console/
+    http://localhost:8002/h2-console/
    
 The Debug Config for it is:
 
@@ -91,7 +91,7 @@ You can get the Idea Data by constructing a json-ld document like this:
 
 #### Importing a Project
 
-POST http://localhost:8080/api/management/requirements/
+POST http://localhost:8002/api/management/requirements/
 
 POST-BODY:
         
@@ -184,11 +184,11 @@ POST-BODY:
 
 #### Getting the PAIRS for one worker
 
-    http://localhost:8080/api/mturk/rating/ratingpairs?ratingProjectId=test-collection-round&hitId=mockHit&workerId=mockWorker&assignmentId=mockAssignment
+    http://localhost:8002/api/mturk/rating/ratingpairs?ratingProjectId=test-collection-round&hitId=mockHit&workerId=mockWorker&assignmentId=mockAssignment
     
 #### Submitting Results
 
-POST http://localhost:8080/api/mturk/rating/submit
+POST http://localhost:8002/api/mturk/rating/submit
 
 POST-Body
 
@@ -216,18 +216,18 @@ POST-Body
     
 #### Reviewing Results
 
-    http://localhost:8080/api/management/mturkRatingSessions/byAssignment?assignmentId=mockAssignment
+    http://localhost:8002/api/management/mturkRatingSessions/byAssignment?assignmentId=mockAssignment
     
     
 #### Approving/Rejecting Results
 For example, if the byAssignment gave you a session with id="d7e104d6-0aea-4f6f-9e62-9ef37ea9098e"
 
-    http://localhost:8080/api/management/mturkRatingSessions/d7e104d6-0aea-4f6f-9e62-9ef37ea9098e/set-usable
-    http://localhost:8080/api/management/mturkRatingSessions/d7e104d6-0aea-4f6f-9e62-9ef37ea9098e/set-unusable
+    http://localhost:8002/api/management/mturkRatingSessions/d7e104d6-0aea-4f6f-9e62-9ef37ea9098e/set-usable
+    http://localhost:8002/api/management/mturkRatingSessions/d7e104d6-0aea-4f6f-9e62-9ef37ea9098e/set-unusable
 
 ### Export
 
-    http://localhost:8080/api/management/export/usableRatingsForProject?ratingProjectId=test-collection-round
+    http://localhost:8002/api/management/export/usableRatingsForProject?ratingProjectId=test-collection-round
     
 Should Return something like this:
 

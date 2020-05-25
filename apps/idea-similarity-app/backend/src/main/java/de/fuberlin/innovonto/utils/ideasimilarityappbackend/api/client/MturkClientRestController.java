@@ -22,7 +22,7 @@ import static org.apache.commons.lang3.StringUtils.isBlank;
 
 @RestController
 @RequestMapping("/api/mturk/")
-@CrossOrigin(origins = {"http://localhost:9002", "http://localhost:9500", "https://i2m-research.imp.fu-berlin.de"})
+@CrossOrigin(origins = {"http://localhost:8002", "http://localhost:8181", "https://i2m-research.imp.fu-berlin.de"})
 public class MturkClientRestController {
     private static final Logger log = LoggerFactory.getLogger(MturkClientRestController.class);
 

@@ -24,7 +24,7 @@ import java.util.UUID;
         servers = {
                 @Server(
                         description = "Development",
-                        url = "http://localhost:8080"
+                        url = "http://localhost:8002"
                 ),
                 @Server(
                         description = "Live",

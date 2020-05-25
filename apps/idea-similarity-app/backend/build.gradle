@@ -48,9 +48,6 @@ dependencies {
 	implementation 'org.apache.jena:jena-core:3.14.0'
 	implementation 'org.apache.jena:jena-arq:3.14.0'
 
-	//Caching:
-	implementation 'com.github.ben-manes.caffeine:caffeine:2.6.2'
-
 	testImplementation('org.springframework.boot:spring-boot-starter-test') {
 		exclude group: 'org.junit.vintage', module: 'junit-vintage-engine'
 	}
