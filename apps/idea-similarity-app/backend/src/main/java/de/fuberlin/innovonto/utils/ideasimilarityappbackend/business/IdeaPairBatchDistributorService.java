@@ -1,4 +1,4 @@
-package de.fuberlin.innovonto.utils.ideasimilarityappbackend;
+package de.fuberlin.innovonto.utils.ideasimilarityappbackend.business;
 
 import de.fuberlin.innovonto.utils.ideasimilarityappbackend.model.BatchState;
 import de.fuberlin.innovonto.utils.ideasimilarityappbackend.model.Batch;

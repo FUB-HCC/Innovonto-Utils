@@ -1,5 +1,6 @@
 package de.fuberlin.innovonto.utils.ideasimilarityappbackend.api.management;
 
+import de.fuberlin.innovonto.utils.ideasimilarityappbackend.business.RatingProjectService;
 import de.fuberlin.innovonto.utils.ideasimilarityappbackend.model.BatchState;
 import de.fuberlin.innovonto.utils.ideasimilarityappbackend.management.Requirements;
 import de.fuberlin.innovonto.utils.ideasimilarityappbackend.management.RequirementsImporter;
@@ -16,17 +17,17 @@ import java.util.UUID;
 @RequestMapping("/api/management/")
 @CrossOrigin(origins = {"http://localhost:8002", "http://localhost:8181", "https://i2m-research.imp.fu-berlin.de"})
 public class ManagementRestController {
-    private final RatingProjectRepository ratingProjectRepository;
+    private final RatingProjectService ratingProjectService;
     private final MturkRatingSessionRepository ratingSessionRepository;
     private final BatchRepository batchRepository;
     private final RequirementsImporter requirementsImporter;
 
     @Autowired
-    public ManagementRestController(RatingProjectRepository ratingProjectRepository, MturkRatingSessionRepository ratingSessionRepository, BatchRepository batchRepository, RequirementsImporter requirementsImporter) {
-        this.ratingProjectRepository = ratingProjectRepository;
+    public ManagementRestController(RatingProjectService ratingProjectService, MturkRatingSessionRepository ratingSessionRepository, BatchRepository batchRepository, RequirementsImporter requirementsImporter) {
         this.ratingSessionRepository = ratingSessionRepository;
         this.batchRepository = batchRepository;
         this.requirementsImporter = requirementsImporter;
+        this.ratingProjectService = ratingProjectService;
     }
 
     //Upload Requirements
@@ -43,13 +44,13 @@ public class ManagementRestController {
     //See all RatingProjects
     @GetMapping("/ratingProjects/")
     public Iterable<RatingProject> getAllRatingProjects() {
-        return ratingProjectRepository.findAll();
+        return ratingProjectService.findAll();
     }
 
     //See all RatingProjects
     @GetMapping("/ratingProjects/{id}")
     public Optional<RatingProject> getRatingProjectById(@PathVariable String id) {
-        return ratingProjectRepository.findById(id);
+        return ratingProjectService.findById(id);
     }
 
     //TODO add Display Object for MturkRating Session, to make reviewing a session easier.

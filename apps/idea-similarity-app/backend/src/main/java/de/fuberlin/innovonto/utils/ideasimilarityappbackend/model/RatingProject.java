@@ -34,7 +34,7 @@ public class RatingProject {
 
     public RatingProject(String id) {
         this();
-        this.id = id;
+        this.id = id.trim();
     }
 
     public String getId() {

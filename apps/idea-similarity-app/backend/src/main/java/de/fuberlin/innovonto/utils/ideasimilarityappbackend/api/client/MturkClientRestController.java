@@ -1,8 +1,9 @@
 package de.fuberlin.innovonto.utils.ideasimilarityappbackend.api.client;
 
-import de.fuberlin.innovonto.utils.ideasimilarityappbackend.IdeaPairBatchDistributorService;
+import de.fuberlin.innovonto.utils.ideasimilarityappbackend.business.IdeaPairBatchDistributorService;
 import de.fuberlin.innovonto.utils.ideasimilarityappbackend.ResourceNotFoundException;
 import de.fuberlin.innovonto.utils.common.web.MturkSesssionInformationMissingException;
+import de.fuberlin.innovonto.utils.ideasimilarityappbackend.business.RatingProjectService;
 import de.fuberlin.innovonto.utils.ideasimilarityappbackend.model.BatchState;
 import de.fuberlin.innovonto.utils.ideasimilarityappbackend.model.*;
 import org.json.JSONObject;
@@ -31,22 +32,22 @@ public class MturkClientRestController {
     private final IdeaRepository ideaRepository;
     private final MturkRatingSessionRepository mturkRatingSessionRepository;
     private final BatchRepository batchRepository;
-    private final RatingProjectRepository ratingProjectRepository;
+    private final RatingProjectService ratingProjectService;
 
     @Autowired
-    public MturkClientRestController(IdeaPairBatchDistributorService distributorService, ChallengeRepository challengeRepository, IdeaRepository ideaRepository, MturkRatingSessionRepository mturkRatingSessionRepository, BatchRepository batchRepository, RatingProjectRepository ratingProjectRepository) {
+    public MturkClientRestController(IdeaPairBatchDistributorService distributorService, ChallengeRepository challengeRepository, IdeaRepository ideaRepository, MturkRatingSessionRepository mturkRatingSessionRepository, BatchRepository batchRepository, RatingProjectService ratingProjectService) {
         this.distributorService = distributorService;
         this.challengeRepository = challengeRepository;
         this.ideaRepository = ideaRepository;
         this.mturkRatingSessionRepository = mturkRatingSessionRepository;
         this.batchRepository = batchRepository;
-        this.ratingProjectRepository = ratingProjectRepository;
+        this.ratingProjectService = ratingProjectService;
     }
 
     @ResponseBody
     @GetMapping(value = "/rating/projectMetadata")
     public RatingProject getProjectMetadata(@RequestParam String ratingProjectId) {
-        Optional<RatingProject> byId = ratingProjectRepository.findById(ratingProjectId);
+        Optional<RatingProject> byId = ratingProjectService.findById(ratingProjectId);
         if (byId.isEmpty()) {
             throw new ResourceNotFoundException("No project for id: " + ratingProjectId);
         } else {
@@ -100,7 +101,7 @@ public class MturkClientRestController {
         if (submissionData == null || isBlank(submissionData.getHitId()) || isBlank(submissionData.getAssignmentId()) || isBlank(submissionData.getWorkerId())) {
             throw new MturkSesssionInformationMissingException("Could not find mturk session information (HWA) on the submissionData object.");
         }
-        Optional<RatingProject> byRatingProjectId = ratingProjectRepository.findById(submissionData.getRatingProjectId());
+        Optional<RatingProject> byRatingProjectId = ratingProjectService.findById(submissionData.getRatingProjectId());
         if (byRatingProjectId.isEmpty()) {
             throw new IllegalStateException("Tried to submit ratings for a project that is not in the database: " + submissionData.getRatingProjectId());
         } else {
@@ -148,7 +149,7 @@ public class MturkClientRestController {
                     sessions = new ArrayList<>();
                 }
                 sessions.add(savedSession);
-                ratingProjectRepository.save(currentProject);
+                ratingProjectService.save(currentProject);
                 log.info("Successfully saved results for:" + currentProject.getId() + ": HWA: " + sourceBatch.getHWA() + ", consisting of " + sourceBatch.getPairs().size() + " pairs.");
                 return savedSession;
             }
